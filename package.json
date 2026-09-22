@@ -4,7 +4,7 @@
   "private": true,
   "description": "Kevyt lohkopohjainen Node.js-sivustopohja ja sisällönhallinta",
   "main": "server.js",
-  "scripts": { "start": "node server.js", "dev": "node --watch server.js", "check": "node --check server.js && node --check views/site.js && node --check public/admin.js && node --check public/site.js", "test": "node test/smoke.js" },
+  "scripts": { "start": "node server.js", "dev": "node --watch server.js", "check": "node test/check.js", "test": "node test/smoke.js && node test/services.js && node test/ai.js" },
   "engines": { "node": ">=20" },
   "dependencies": { "@fortawesome/fontawesome-free": "^7.0.1", "dotenv": "^17.2.2", "express": "^5.1.0", "multer": "^2.0.2", "nodemailer": "^10.0.10", "resend": "^6.28.1", "sanitize-html": "^2.17.0" }
 }
