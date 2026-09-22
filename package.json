@@ -8,7 +8,7 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "check": "node test/check.js",
-    "test": "node test/smoke.js && node test/services.js && node test/ai.js && node test/history.js && node test/pages.js && node test/plugins.js && node test/images.js && node test/undo.js && node test/seo.js && node test/transfer.js && node test/blog.js && node test/forms.js && node test/languages.js && node test/embeds.js && node test/content-sections.js"
+    "test": "node test/smoke.js && node test/services.js && node test/ai.js && node test/history.js && node test/pages.js && node test/plugins.js && node test/images.js && node test/undo.js && node test/seo.js && node test/transfer.js && node test/blog.js && node test/forms.js && node test/languages.js && node test/embeds.js && node test/content-sections.js && node test/products.js && node test/layout-builder.js && node test/layout-ai.js && node test/theme-ai.js && node test/site-ai.js && node test/site-workflow.js && node test/section-ai.js"
   },
   "engines": {
     "node": ">=20.9.0"

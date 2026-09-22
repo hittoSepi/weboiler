@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict'),builder=require('../lib/layout-builder');
+const leaf=(id,type='text',value='Default')=>({id,type,defaults:{value},children:[]});
+const source={elements:[{id:'card',name:'Card',root:{...leaf('root','div'),style:{background:'#123456'},children:[leaf('title','heading')]}}],sections:[{id:'sample',name:'Sample',root:{...leaf('row','flex'),children:[{...leaf('a','element'),ref:'card'},{...leaf('b','element'),ref:'card'},leaf('html','html','<div onclick="alert(1)"><script>alert(1)</script><strong>Safe</strong></div>')]}}]};
+const site={builder:builder.clean(source)},section={id:'test',templateId:'sample',content:builder.content({'a-title':{value:'First'},'b-title':{value:'Second'}})};
+let html=builder.render(section,site,()=> '');assert.match(html,/First/);assert.match(html,/Second/);assert.match(html,/<strong>Safe<\/strong>/);assert.doesNotMatch(html,/onclick|<script/);assert.equal((html.match(/background:#123456/g)||[]).length,2);
+site.builder.elements[0].root.style.background='#abcdef';html=builder.render(section,site,()=> '');assert.equal((html.match(/background:#abcdef/g)||[]).length,2);assert.match(html,/First/);
+assert.match(html,/layout-flex layout-stack/);
+const moved=structuredClone(site);const first=moved.builder.sections[0].root.children.shift();moved.builder.sections[0].root.children.push({...leaf('container','div'),children:[first]});assert.match(builder.render(section,moved,()=>''),/First/);
+const cyclic=structuredClone(source);cyclic.elements[0].root.children.push({...leaf('cycle','element'),ref:'card'});assert.throws(()=>builder.clean(cyclic),/itseään/);
+const missing=structuredClone(source);missing.elements=[];assert.throws(()=>builder.clean(missing),/puuttuu/);
+const bad=structuredClone(source);bad.elements[0].root.style.background='url(javascript:evil)';assert.throws(()=>builder.clean(bad));
+assert.throws(()=>builder.content({'bad.key':{value:'x'}}));assert.throws(()=>builder.content({a:{image:'javascript:evil'}}));
+assert.equal(builder.render({...section,templateId:'missing'},site,()=>''),'');
+const pluginSource={sections:[{id:'products',name:'Product',root:{...leaf('product','plugin','sku'),pluginType:'product-feature'}}]};let called;
+builder.render({id:'x',templateId:'products',content:{}},{builder:builder.clean(pluginSource)},p=>{called=p;return 'Product';});assert.equal(called.pluginData.productId,'sku');
+const oversized={sections:[{id:'big',root:{...leaf('root','div'),children:Array.from({length:100},(_,i)=>leaf('n'+i))}}]};assert.throws(()=>builder.clean(oversized),/liian suuri/);
+console.log('Layout builder tests OK (shared templates, instance content, HTML safety, cycles, bounds, plugins, mobile classes)');

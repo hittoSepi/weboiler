@@ -19,8 +19,8 @@ function applyAsset(path,value,dialog) {
   dirty();
   dialog.close();
   if(location.pathname==='/admin/editori')renderEditor();
-  else if(location.pathname==='/admin/elementit')renderElements();
-  else if(location.pathname==='/admin/plugins')renderPlugins();
+  else if(location.pathname==='/admin/elementit'||location.pathname==='/admin/osiot')renderLayoutBuilder();
+  else if(location.pathname==='/admin/plugins'||pluginCatalog.some(plugin=>plugin.adminPage&&location.pathname==='/admin/'+plugin.adminPage.slug))renderPlugins();
   else renderSettings();
 }
 

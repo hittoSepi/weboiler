@@ -1,4 +1,2342 @@
 {
+  "builder": {
+    "elements": [
+      {
+        "id": "benefit-card",
+        "name": "Hyötykortti",
+        "root": {
+          "id": "benefit-card-container",
+          "type": "flex",
+          "label": "Hyötykortti",
+          "editable": false,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#FFFFFF",
+            "gap": 16,
+            "padding": 32,
+            "radius": 8,
+            "align": "start",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "benefit-card-icon-wrapper",
+              "type": "flex",
+              "label": "Ikonin tausta",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "background": "#F0F5FF",
+                "padding": 14,
+                "radius": 8,
+                "align": "center",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "benefit-card-icon",
+                  "type": "icon",
+                  "label": "Ikoni",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#3A86FF",
+                    "fontSize": 24,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "bolt",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "benefit-card-title",
+              "type": "heading",
+              "label": "Otsikko",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#0B132B",
+                "fontSize": 20,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Salamannopea suorituskyky",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            },
+            {
+              "id": "benefit-card-description",
+              "type": "text",
+              "label": "Kuvausteksti",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#475569",
+                "fontSize": 16,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Sivusto latautuu silmänräpäyksessä modernin optimoinnin ansiosta, ja sisäänrakennettu tekoäly tehostaa sisällöntuotantoa vaivattomasti.",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "id": "step-card",
+        "name": "Vaihekortti",
+        "root": {
+          "id": "step-card-root",
+          "type": "flex",
+          "label": "Vaihekortti",
+          "editable": false,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#FFFFFF",
+            "gap": 16,
+            "padding": 32,
+            "radius": 8,
+            "align": "start",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "step-card-badge",
+              "type": "flex",
+              "label": "Numeromerkki",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "background": "#3A86FF",
+                "padding": 12,
+                "radius": 8,
+                "align": "center",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "step-card-number",
+                  "type": "text",
+                  "label": "Järjestysnumero",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 18,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "01",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "step-card-title",
+              "type": "heading",
+              "label": "Vaiheen otsikko",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#0B132B",
+                "fontSize": 24,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "1. Kartoitus ja suunnittelu",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            },
+            {
+              "id": "step-card-description",
+              "type": "text",
+              "label": "Vaiheen kuvaus",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#475569",
+                "fontSize": 16,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Aloitamme projektin perehtymällä tarpeisiin ja tavoitteisiin, minkä pohjalta laadimme selkeän toimintasuunnitelman.",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "id": "use-case-card",
+        "name": "Käyttötapauskortti",
+        "root": {
+          "id": "use-case-card-root",
+          "type": "flex",
+          "label": "Käyttötapauskortti",
+          "editable": true,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#FFFFFF",
+            "gap": 16,
+            "padding": 32,
+            "radius": 8,
+            "align": "stretch",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "use-case-header-row",
+              "type": "flex",
+              "label": "Ylätunniste",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 12,
+                "align": "center",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "use-case-icon",
+                  "type": "icon",
+                  "label": "Kuvake",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#3A86FF",
+                    "fontSize": 22,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "desktop",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "use-case-badge",
+                  "type": "subtitle",
+                  "label": "Kategoria",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 13,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "KÄYTTÖKOHDE",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "use-case-title",
+              "type": "heading",
+              "label": "Otsikko",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#0B132B",
+                "fontSize": 24,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Yrityssivusto",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            },
+            {
+              "id": "use-case-desc",
+              "type": "text",
+              "label": "Kuvaus",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#475569",
+                "fontSize": 16,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Moderni kokonaisuus yrityksen palveluiden, referenssien ja yhteystietojen esittelyyn verkossa.",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            },
+            {
+              "id": "use-case-features",
+              "type": "list",
+              "label": "Ominaisuuslista",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#0B132B",
+                "fontSize": 15,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Mobiilioptimoitu ja selkeä rakenne\nHelppo yhteydenotto ja tarjouspyyntö\nOptimoitu latausnopeus ja hakukonenäkyvyys",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            },
+            {
+              "id": "use-case-target",
+              "type": "text",
+              "label": "Kohderyhmä",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#475569",
+                "fontSize": 14,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Soveltuu asiantuntijayrityksille, palveluntarjoajille ja paikallisille toimijoille.",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "id": "showcase-card",
+        "name": "Esikatselukortti",
+        "root": {
+          "id": "showcase-card-root",
+          "type": "flex",
+          "label": "Esikatselukortti",
+          "editable": false,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#FFFFFF",
+            "gap": 20,
+            "padding": 24,
+            "radius": 8,
+            "align": "stretch",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "showcase-window-bar",
+              "type": "flex",
+              "label": "Ikkunapalkki",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "background": "#F8F9FA",
+                "gap": 12,
+                "padding": 12,
+                "radius": 6,
+                "align": "center",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "showcase-window-dots",
+                  "type": "flex",
+                  "label": "Painikkeet",
+                  "editable": false,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "gap": 6,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": [
+                    {
+                      "id": "window-dot-red",
+                      "type": "icon",
+                      "label": "Sulje",
+                      "editable": false,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#EF4444",
+                        "fontSize": 10,
+                        "align": "stretch",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "circle",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "window-dot-yellow",
+                      "type": "icon",
+                      "label": "Pienennä",
+                      "editable": false,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#F59E0B",
+                        "fontSize": 10,
+                        "align": "stretch",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "circle",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "window-dot-green",
+                      "type": "icon",
+                      "label": "Suurenna",
+                      "editable": false,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#10B981",
+                        "fontSize": 10,
+                        "align": "stretch",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "circle",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "showcase-bar-title",
+                  "type": "text",
+                  "label": "Näkymän otsikko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 13,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Weboiler Studio – Esikatselunäkymä",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "showcase-image-wrap",
+              "type": "flex",
+              "label": "Kuva-alue",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "radius": 6,
+                "align": "stretch",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "showcase-image",
+                  "type": "image",
+                  "label": "Kuvakaappaus",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "radius": 6,
+                    "minHeight": 320,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "/uploads/ai-f801dad8-ef21-49f7-82a9-f9758efa1f4b.jpg",
+                    "alt": "Weboiler-editorin käyttöliittymä",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "showcase-info-wrap",
+              "type": "flex",
+              "label": "Kuvatekstialue",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 8,
+                "padding": 8,
+                "align": "stretch",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "showcase-heading",
+                  "type": "heading",
+                  "label": "Otsikko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#0B132B",
+                    "fontSize": 20,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Reaaliaikainen sivumuokkain",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "showcase-caption",
+                  "type": "text",
+                  "label": "Selittävä teksti",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 15,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Muokkaa sisältöjä, sommittele elementtejä ja esikatsele valmista sivustoa suoraan selaimessa ilman erillistä koodausta.",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "faq-item",
+        "name": "UKK-kortti",
+        "root": {
+          "id": "faq-card",
+          "type": "flex",
+          "label": "UKK-kortti",
+          "editable": true,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#FFFFFF",
+            "gap": 12,
+            "padding": 24,
+            "radius": 8,
+            "align": "stretch",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "faq-header",
+              "type": "flex",
+              "label": "Kysymysotsikko",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 12,
+                "align": "center",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "faq-icon",
+                  "type": "icon",
+                  "label": "Kuvake",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#3A86FF",
+                    "fontSize": 20,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "circle-question",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "faq-question",
+                  "type": "heading",
+                  "label": "Kysymysteksti",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#0B132B",
+                    "fontSize": 18,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Miten tekoäly nopeuttaa verkkosivujen tekemistä?",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "faq-answer",
+              "type": "text",
+              "label": "Vastausteksti",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#475569",
+                "fontSize": 15,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Tekoäly auttaa luomaan sivuston asettelun ja tekstiluonnokset automaattisesti annettujen toiveiden pohjalta, jolloin säästät aikaa ja pääset heti muokkaamaan valmista pohjaa.",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "id": "footer-column",
+        "name": "Alatunnistepalsta",
+        "root": {
+          "id": "footer-col-root",
+          "type": "flex",
+          "label": "Alatunnistepalsta",
+          "editable": true,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "gap": 16,
+            "grow": 1,
+            "align": "start",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "footer-col-heading",
+              "type": "heading",
+              "label": "Palstan otsikko",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "color": "#0B132B",
+                "fontSize": 16,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "Pikalinkit",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": []
+            },
+            {
+              "id": "footer-col-links",
+              "type": "flex",
+              "label": "Linkkilista",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 12,
+                "align": "start",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "footer-link-1",
+                  "type": "text",
+                  "label": "Linkki 1",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 14,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Etusivu",
+                    "image": "",
+                    "alt": "",
+                    "url": "/"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "footer-link-2",
+                  "type": "text",
+                  "label": "Linkki 2",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 14,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Palvelut",
+                    "image": "",
+                    "alt": "",
+                    "url": "/palvelut"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "footer-link-3",
+                  "type": "text",
+                  "label": "Linkki 3",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 14,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Tietoa meistä",
+                    "image": "",
+                    "alt": "",
+                    "url": "/tietoa"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "footer-link-4",
+                  "type": "text",
+                  "label": "Linkki 4",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 14,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Tietosuojaseloste",
+                    "image": "",
+                    "alt": "",
+                    "url": "/tietosuoja"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "footer-link-5",
+                  "type": "text",
+                  "label": "Linkki 5",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 14,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Yhteystiedot",
+                    "image": "",
+                    "alt": "",
+                    "url": "/yhteystiedot"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "sections": [
+      {
+        "id": "s-f3d69f90c9259b8e63d8f8c2",
+        "name": "Miksi valita Weboiler",
+        "root": {
+          "id": "arvolupaus-section",
+          "type": "div",
+          "label": "Arvolupaus-osio",
+          "editable": false,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#F8F9FA",
+            "padding": 80,
+            "align": "center",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "arvolupaus-container",
+              "type": "flex",
+              "label": "Sisältöalue",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 56,
+                "align": "stretch",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "arvolupaus-header",
+                  "type": "flex",
+                  "label": "Otsikkoalue",
+                  "editable": false,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "gap": 16,
+                    "align": "center",
+                    "direction": "column",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": [
+                    {
+                      "id": "arvolupaus-eyebrow",
+                      "type": "subtitle",
+                      "label": "Yläotsikko",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#3A86FF",
+                        "fontSize": 14,
+                        "align": "center",
+                        "direction": "row",
+                        "mobileStack": false
+                      },
+                      "defaults": {
+                        "value": "MIKSI VALITA WEBOILER",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "arvolupaus-title",
+                      "type": "heading",
+                      "label": "Pääotsikko",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#0B132B",
+                        "fontSize": 36,
+                        "align": "center",
+                        "direction": "row",
+                        "mobileStack": false
+                      },
+                      "defaults": {
+                        "value": "Rakenna ammattimaiset verkkosivut ilman koodausvaivaa",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "arvolupaus-lead",
+                      "type": "text",
+                      "label": "Johdantoteksti",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#475569",
+                        "fontSize": 18,
+                        "align": "center",
+                        "direction": "row",
+                        "mobileStack": false
+                      },
+                      "defaults": {
+                        "value": "Weboiler yhdistää tekoälyn ja selkeän käyttöliittymän, jotta voit siirtyä ideasta julkaisuvalmiiseen sivustoon hetkessä.",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "arvolupaus-grid",
+                  "type": "grid",
+                  "label": "Hyötykorttien ruudukko",
+                  "editable": false,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "gap": 32,
+                    "columns": 3,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": [
+                    {
+                      "id": "arvolupaus-card-1",
+                      "type": "element",
+                      "label": "Hyöty 1: Nopea käyttöönotto",
+                      "editable": true,
+                      "ref": "benefit-card",
+                      "pluginType": "",
+                      "style": {
+                        "grow": 1,
+                        "align": "stretch",
+                        "direction": "column",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "arvolupaus-card-2",
+                      "type": "element",
+                      "label": "Hyöty 2: Älykäs rakenteen luonti",
+                      "editable": true,
+                      "ref": "benefit-card",
+                      "pluginType": "",
+                      "style": {
+                        "grow": 1,
+                        "align": "stretch",
+                        "direction": "column",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "arvolupaus-card-3",
+                      "type": "element",
+                      "label": "Hyöty 3: Vaivaton muokkaus",
+                      "editable": true,
+                      "ref": "benefit-card",
+                      "pluginType": "",
+                      "style": {
+                        "grow": 1,
+                        "align": "stretch",
+                        "direction": "column",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "s-aebccb67b51de5a124b6539d",
+        "name": "Miten Weboiler toimii",
+        "root": {
+          "id": "miten-se-toimii-section",
+          "type": "flex",
+          "label": "Miten se toimii -osio",
+          "editable": false,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#F8F9FA",
+            "gap": 48,
+            "padding": 80,
+            "radius": 0,
+            "align": "center",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "miten-se-toimii-header",
+              "type": "flex",
+              "label": "Otsikkoalue",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 16,
+                "padding": 0,
+                "radius": 0,
+                "align": "center",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "miten-se-toimii-badge",
+                  "type": "subtitle",
+                  "label": "Alaotsikko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#3A86FF",
+                    "fontSize": 16,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Selkeä 3-vaiheinen polku",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "miten-se-toimii-title",
+                  "type": "heading",
+                  "label": "Pääotsikko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#0B132B",
+                    "fontSize": 36,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Miten Weboiler toimii",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "miten-se-toimii-description",
+                  "type": "text",
+                  "label": "Kuvaus",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 18,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Luo valmis ja ammattimainen verkkosivusto minuuteissa selkeän ja ohjatun prosessin avulla.",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "miten-se-toimii-grid",
+              "type": "grid",
+              "label": "Vaihekorttien ruudukko",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 32,
+                "padding": 0,
+                "radius": 0,
+                "columns": 3,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "step-card-item-1",
+                  "type": "element",
+                  "label": "Vaihe 1",
+                  "editable": false,
+                  "ref": "step-card",
+                  "pluginType": "",
+                  "style": {
+                    "align": "stretch",
+                    "direction": "column",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "step-card-item-2",
+                  "type": "element",
+                  "label": "Vaihe 2",
+                  "editable": false,
+                  "ref": "step-card",
+                  "pluginType": "",
+                  "style": {
+                    "align": "stretch",
+                    "direction": "column",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "step-card-item-3",
+                  "type": "element",
+                  "label": "Vaihe 3",
+                  "editable": false,
+                  "ref": "step-card",
+                  "pluginType": "",
+                  "style": {
+                    "align": "stretch",
+                    "direction": "column",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "s-dbcb725b6c6fc4d4be371653",
+        "name": "kayttotapaukset",
+        "root": {
+          "id": "use-cases-section-root",
+          "type": "div",
+          "label": "Käyttötapaukset-osio",
+          "editable": true,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#F8F9FA",
+            "padding": 80,
+            "align": "stretch",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "use-cases-container",
+              "type": "flex",
+              "label": "Sisältöalue",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 48,
+                "align": "center",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "use-cases-header-block",
+                  "type": "flex",
+                  "label": "Otsikkolohko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "gap": 16,
+                    "align": "center",
+                    "direction": "column",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": [
+                    {
+                      "id": "use-cases-badge",
+                      "type": "subtitle",
+                      "label": "Alaotsikko",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#3A86FF",
+                        "fontSize": 14,
+                        "align": "center",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "KÄYTTÖKOHTEET",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "use-cases-heading",
+                      "type": "heading",
+                      "label": "Pääotsikko",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#0B132B",
+                        "fontSize": 36,
+                        "align": "center",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "Suunniteltu monipuolisiin tarpeisiin",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "use-cases-description",
+                      "type": "text",
+                      "label": "Kuvausteksti",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#475569",
+                        "fontSize": 18,
+                        "align": "center",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "Weboiler soveltuu suoraviivaisesti erilaisiin verkkosivutarpeisiin ilman monimutkaista koodausta tai suunnitteluohjelmien pyörittämistä.",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "use-cases-cards-grid",
+                  "type": "grid",
+                  "label": "Korttiruudukko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "gap": 24,
+                    "columns": 3,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": [
+                    {
+                      "id": "use-case-card-1",
+                      "type": "element",
+                      "label": "Käyttötapaus 1: Yrityssivustot",
+                      "editable": true,
+                      "ref": "use-case-card",
+                      "pluginType": "",
+                      "style": {
+                        "align": "stretch",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "use-case-card-2",
+                      "type": "element",
+                      "label": "Käyttötapaus 2: Kampanjasivut",
+                      "editable": true,
+                      "ref": "use-case-card",
+                      "pluginType": "",
+                      "style": {
+                        "align": "stretch",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "use-case-card-3",
+                      "type": "element",
+                      "label": "Käyttötapaus 3: Portfoliot",
+                      "editable": true,
+                      "ref": "use-case-card",
+                      "pluginType": "",
+                      "style": {
+                        "align": "stretch",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "s-7f5c8e147afd19bff461f7c0",
+        "name": "Puhdas ja intuitiivinen työtila",
+        "root": {
+          "id": "showcase-section-root",
+          "type": "flex",
+          "label": "Tuotteen visuaalinen esittely",
+          "editable": false,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#F8F9FA",
+            "gap": 56,
+            "padding": 80,
+            "align": "stretch",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "showcase-header-wrap",
+              "type": "flex",
+              "label": "Otsikkoalue",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 16,
+                "align": "center",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "showcase-section-tag",
+                  "type": "text",
+                  "label": "Aihetunniste",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#3A86FF",
+                    "fontSize": 14,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "VISUAALINEN KÄYTTÖLIITTYMÄ",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "showcase-main-heading",
+                  "type": "heading",
+                  "label": "Pääotsikko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#0B132B",
+                    "fontSize": 38,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Puhdas ja intuitiivinen työtila",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "showcase-section-desc",
+                  "type": "subtitle",
+                  "label": "Kuvausteksti",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 18,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Weboiler yhdistää tekoälyn ja suoraviivaisen visuaalisen editorin. Näet reaaliajassa, kuinka sivustosi rakentuu pala palalta.",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "showcase-cards-grid",
+              "type": "grid",
+              "label": "Korttiruudukko",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 32,
+                "columns": 2,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "showcase-card-workspace",
+                  "type": "element",
+                  "label": "Editorinäkymä",
+                  "editable": false,
+                  "ref": "showcase-card",
+                  "pluginType": "",
+                  "style": {
+                    "grow": 1,
+                    "align": "stretch",
+                    "direction": "column",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "showcase-card-components",
+                  "type": "element",
+                  "label": "Komponenttivalikko",
+                  "editable": false,
+                  "ref": "showcase-card",
+                  "pluginType": "",
+                  "style": {
+                    "grow": 1,
+                    "align": "stretch",
+                    "direction": "column",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "s-cac058e87047239408c877b9",
+        "name": "Usein kysytyt kysymykset",
+        "root": {
+          "id": "faq-section",
+          "type": "flex",
+          "label": "UKK-osio",
+          "editable": false,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#F8F9FA",
+            "gap": 48,
+            "padding": 80,
+            "align": "center",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "faq-header-group",
+              "type": "flex",
+              "label": "Otsikkoalue",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 16,
+                "align": "center",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "faq-subtitle",
+                  "type": "subtitle",
+                  "label": "Alaotsikko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#3A86FF",
+                    "fontSize": 14,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "USEIN KYSYTYT KYSYMYKSET",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "faq-title",
+                  "type": "heading",
+                  "label": "Pääotsikko",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#0B132B",
+                    "fontSize": 36,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Kysymyksiä ja vastauksia Weboilerista",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "faq-lead",
+                  "type": "text",
+                  "label": "Esittelyteksti",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "color": "#475569",
+                    "fontSize": 18,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "Tähän olemme koonneet vastaukset yleisimpiin tekoälysivustojen toimintaan, muokkaukseen ja tekniikkaan liittyviin kysymyksiin.",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "faq-grid",
+              "type": "grid",
+              "label": "Kysymysruudukko",
+              "editable": false,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 24,
+                "columns": 2,
+                "align": "stretch",
+                "direction": "row",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "faq-item-1",
+                  "type": "element",
+                  "label": "UKK-kortti 1",
+                  "editable": true,
+                  "ref": "faq-item",
+                  "pluginType": "",
+                  "style": {
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "faq-item-2",
+                  "type": "element",
+                  "label": "UKK-kortti 2",
+                  "editable": true,
+                  "ref": "faq-item",
+                  "pluginType": "",
+                  "style": {
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "faq-item-3",
+                  "type": "element",
+                  "label": "UKK-kortti 3",
+                  "editable": true,
+                  "ref": "faq-item",
+                  "pluginType": "",
+                  "style": {
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "faq-item-4",
+                  "type": "element",
+                  "label": "UKK-kortti 4",
+                  "editable": true,
+                  "ref": "faq-item",
+                  "pluginType": "",
+                  "style": {
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "s-a0e40091c7e64507bd10748b",
+        "name": "Weboiler Alatunniste",
+        "root": {
+          "id": "footer-root",
+          "type": "div",
+          "label": "Alatunniste-osio",
+          "editable": true,
+          "ref": "",
+          "pluginType": "",
+          "style": {
+            "background": "#0B132B",
+            "padding": 64,
+            "align": "stretch",
+            "direction": "column",
+            "mobileStack": true
+          },
+          "defaults": {
+            "value": "",
+            "image": "",
+            "alt": "",
+            "url": ""
+          },
+          "children": [
+            {
+              "id": "footer-container",
+              "type": "flex",
+              "label": "Alatunnisteen sisältöalue",
+              "editable": true,
+              "ref": "",
+              "pluginType": "",
+              "style": {
+                "gap": 48,
+                "align": "stretch",
+                "direction": "column",
+                "mobileStack": true
+              },
+              "defaults": {
+                "value": "",
+                "image": "",
+                "alt": "",
+                "url": ""
+              },
+              "children": [
+                {
+                  "id": "footer-main-columns",
+                  "type": "grid",
+                  "label": "Palsta-alue",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "gap": 40,
+                    "columns": 4,
+                    "align": "start",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": [
+                    {
+                      "id": "footer-brand-col",
+                      "type": "flex",
+                      "label": "Brändipalsta",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "gap": 16,
+                        "grow": 1,
+                        "align": "start",
+                        "direction": "column",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": [
+                        {
+                          "id": "footer-brand-title",
+                          "type": "heading",
+                          "label": "Brändin nimi",
+                          "editable": true,
+                          "ref": "",
+                          "pluginType": "",
+                          "style": {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                            "align": "stretch",
+                            "direction": "row",
+                            "mobileStack": true
+                          },
+                          "defaults": {
+                            "value": "Weboiler",
+                            "image": "",
+                            "alt": "",
+                            "url": ""
+                          },
+                          "children": []
+                        },
+                        {
+                          "id": "footer-brand-desc",
+                          "type": "text",
+                          "label": "Brändikuvaus",
+                          "editable": true,
+                          "ref": "",
+                          "pluginType": "",
+                          "style": {
+                            "color": "#94A3B8",
+                            "fontSize": 14,
+                            "align": "stretch",
+                            "direction": "row",
+                            "mobileStack": true
+                          },
+                          "defaults": {
+                            "value": "Älykäs ja nopea työkalu modernien verkkosivustojen luomiseen tekoälyn avulla.",
+                            "image": "",
+                            "alt": "",
+                            "url": ""
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "footer-col-nav",
+                      "type": "element",
+                      "label": "Navigaatiopalsta",
+                      "editable": true,
+                      "ref": "footer-column",
+                      "pluginType": "",
+                      "style": {
+                        "grow": 1,
+                        "align": "start",
+                        "direction": "column",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "footer-col-product",
+                      "type": "element",
+                      "label": "Tuotepalsta",
+                      "editable": true,
+                      "ref": "footer-column",
+                      "pluginType": "",
+                      "style": {
+                        "grow": 1,
+                        "align": "start",
+                        "direction": "column",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "footer-col-legal",
+                      "type": "element",
+                      "label": "Ehdot-palsta",
+                      "editable": true,
+                      "ref": "footer-column",
+                      "pluginType": "",
+                      "style": {
+                        "grow": 1,
+                        "align": "start",
+                        "direction": "column",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "footer-divider",
+                  "type": "div",
+                  "label": "Erotinjalka",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "background": "#1E293B",
+                    "minHeight": 1,
+                    "align": "stretch",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": []
+                },
+                {
+                  "id": "footer-bottom-row",
+                  "type": "flex",
+                  "label": "Alarivi",
+                  "editable": true,
+                  "ref": "",
+                  "pluginType": "",
+                  "style": {
+                    "gap": 16,
+                    "align": "center",
+                    "direction": "row",
+                    "mobileStack": true
+                  },
+                  "defaults": {
+                    "value": "",
+                    "image": "",
+                    "alt": "",
+                    "url": ""
+                  },
+                  "children": [
+                    {
+                      "id": "footer-copyright",
+                      "type": "text",
+                      "label": "Tekijänoikeus",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#64748B",
+                        "fontSize": 13,
+                        "grow": 1,
+                        "align": "stretch",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "© 2025 Weboiler. Kaikki oikeudet pidätetään.",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "footer-legal-note",
+                      "type": "text",
+                      "label": "Lakisääteinen huomautus",
+                      "editable": true,
+                      "ref": "",
+                      "pluginType": "",
+                      "style": {
+                        "color": "#64748B",
+                        "fontSize": 13,
+                        "align": "stretch",
+                        "direction": "row",
+                        "mobileStack": true
+                      },
+                      "defaults": {
+                        "value": "Tekoälyavusteinen sivustonrakennuspalvelu.",
+                        "image": "",
+                        "alt": "",
+                        "url": ""
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
   "pages": [],
   "plugins": {
     "references": {
@@ -18,6 +2356,22 @@
       "questions": [],
       "reviews": [],
       "people": []
+    },
+    "products": {
+      "enabled": true,
+      "items": [
+        {
+          "id": "item-56f2389d-aba4-45dd-906c-e7e699573745",
+          "title": "Uusi kohde",
+          "slug": "kohde-90f896b4",
+          "price": "",
+          "category": "",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "imagePosition": "50% 50%"
+        }
+      ]
     }
   },
   "meta": {
@@ -26,108 +2380,43 @@
     "shareImage": "",
     "shareImageAlt": "",
     "siteName": "Weboiler",
-    "title": "Weboiler - oma sivustosi",
-    "description": "Kevyt ja muokattava verkkosivusto.",
+    "title": "Weboiler – Tekoälyavusteinen verkkosivustojen luontityökalu",
+    "description": "Luo ammattimaiset, nopeat ja modernit verkkosivut vaivattomasti tekoälyn avulla. Suunniteltu freelancereille, yrityksille ja markkinointitiimeille.",
     "siteUrl": "http://localhost:3100",
     "logo": "",
     "logoAlt": ""
   },
   "theme": {
-    "background": "#07101c",
-    "surface": "#101b2a",
-    "text": "#f6f3eb",
-    "muted": "#aab4c1",
-    "accent": "#f29a2e",
-    "font": "Arial, sans-serif",
-    "headingFont": "Arial, sans-serif",
-    "maxWidth": 1280,
-    "radius": 6
+    "background": "#F8F9FA",
+    "surface": "#FFFFFF",
+    "text": "#0B132B",
+    "muted": "#475569",
+    "accent": "#3A86FF",
+    "font": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    "headingFont": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    "maxWidth": 1200,
+    "radius": 8
   },
   "navigation": [
     {
-      "label": "Palvelut",
-      "target": "palvelut"
-    },
-    {
-      "label": "Meistä",
-      "target": "meista"
-    },
-    {
-      "label": "Yhteys",
-      "target": "yhteys"
+      "label": "Etusivu",
+      "target": "/"
     }
   ],
   "sections": [
     {
-      "id": "palvelut",
+      "id": "hero",
       "pluginData": {},
-      "type": "features",
-      "eyebrow": "MITÄ TEEMME",
-      "title": "PALVELUT",
-      "text": "",
-      "html": "",
-      "buttonLabel": "",
-      "buttonUrl": "",
-      "image": "",
-      "imagePosition": "50% 50%",
-      "email": "",
-      "phone": "",
-      "form": null,
-      "icon": "circle-check",
-      "iconColor": "",
-      "iconSize": 40,
-      "interval": 5,
-      "items": [
-        {
-          "title": "Palvelu yksi",
-          "text": "Kerro lyhyesti palvelusta.",
-          "image": "",
-          "imagePosition": "50% 50%",
-          "imageAlt": "",
-          "url": "",
-          "linkLabel": "",
-          "icon": "award",
-          "iconColor": "",
-          "iconSize": 32
-        },
-        {
-          "title": "Palvelu kaksi",
-          "text": "Muokkaa sisältöä hallinnassa.",
-          "image": "",
-          "imagePosition": "50% 50%",
-          "imageAlt": "",
-          "url": "",
-          "linkLabel": "",
-          "icon": "",
-          "iconColor": "",
-          "iconSize": 32
-        },
-        {
-          "title": "Palvelu kolme",
-          "text": "Lisää tarvittaessa uusia kortteja.",
-          "image": "",
-          "imagePosition": "50% 50%",
-          "imageAlt": "",
-          "url": "",
-          "linkLabel": "",
-          "icon": "",
-          "iconColor": "",
-          "iconSize": 32
-        }
-      ],
-      "images": []
-    },
-    {
-      "id": "etusivu",
-      "pluginData": {},
+      "templateId": "",
+      "content": {},
       "type": "hero",
-      "eyebrow": "TERVETULOA",
-      "title": "Rakenna sivu omasta sisällöstäsi",
-      "text": "Lisää, järjestä ja muokkaa osioita hallinnasta.",
+      "eyebrow": "",
+      "title": "Luo modernit verkkosivut tekoälyn vauhdilla",
+      "text": "Weboiler on älykäs verkkosivutyökalu freelancereille, pienyrittäjille ja markkinointitiimeille. Rakenna ja julkaise laadukkaat sivustot vaivattomasti.",
       "html": "",
-      "buttonLabel": "Ota yhteyttä",
-      "buttonUrl": "#yhteys",
-      "image": "",
+      "buttonLabel": "Kokeile työkalua",
+      "buttonUrl": "/",
+      "image": "/uploads/ai-a890b495-6fa8-40f3-8ba0-02b48d7d6b15.jpg",
       "imagePosition": "50% 50%",
       "email": "",
       "phone": "",
@@ -140,68 +2429,23 @@
       "images": []
     },
     {
-      "id": "meista",
+      "id": "arvolupaus",
       "pluginData": {},
-      "type": "text",
-      "eyebrow": "MEISTÄ",
-      "title": "Yrityksen tarina",
-      "text": "Tähän voit kirjoittaa yrityksestä, toimintatavasta ja arvoista.",
-      "html": "",
-      "buttonLabel": "",
-      "buttonUrl": "",
-      "image": "",
-      "imagePosition": "50% 50%",
-      "email": "",
-      "phone": "",
-      "form": null,
-      "icon": "",
-      "iconColor": "",
-      "iconSize": 40,
-      "interval": 5,
-      "items": [],
-      "images": []
-    },
-    {
-      "id": "osio-3ea7b58d",
-      "pluginData": {
-        "url": "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d5502.568560436228!2d22.35335860273977!3d61.25584996271678!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2sfi!4v1790057166663!5m2!1sen!2sfi",
-        "height": "300"
-      },
-      "type": "map-embed",
-      "eyebrow": "UUSI OSIO",
-      "title": "KARTTA",
+      "templateId": "s-f3d69f90c9259b8e63d8f8c2",
+      "content": {},
+      "type": "custom",
+      "eyebrow": "",
+      "title": "",
       "text": "",
       "html": "",
-      "buttonLabel": "Lue lisää",
-      "buttonUrl": "#",
+      "buttonLabel": "",
+      "buttonUrl": "",
       "image": "",
       "imagePosition": "50% 50%",
       "email": "",
       "phone": "",
       "form": null,
       "icon": "",
-      "iconColor": "#f29a2e",
-      "iconSize": 40,
-      "interval": 5,
-      "items": [],
-      "images": []
-    },
-    {
-      "id": "yhteys",
-      "pluginData": {},
-      "type": "contact",
-      "eyebrow": "OTA YHTEYTTÄ",
-      "title": "Aloitetaanko yhteistyö?",
-      "text": "Lähetä viesti lomakkeella.",
-      "html": "",
-      "buttonLabel": "",
-      "buttonUrl": "",
-      "image": "",
-      "imagePosition": "50% 50%",
-      "email": "info@example.fi",
-      "phone": "+358 40 000 0000",
-      "form": null,
-      "icon": "shield-halved",
       "iconColor": "",
       "iconSize": 40,
       "interval": 5,
@@ -209,22 +2453,144 @@
       "images": []
     },
     {
-      "id": "osio-eff91b71",
+      "id": "miten-se-toimii",
       "pluginData": {},
+      "templateId": "s-aebccb67b51de5a124b6539d",
+      "content": {},
+      "type": "custom",
+      "eyebrow": "",
+      "title": "",
+      "text": "",
+      "html": "",
+      "buttonLabel": "",
+      "buttonUrl": "",
+      "image": "",
+      "imagePosition": "50% 50%",
+      "email": "",
+      "phone": "",
+      "form": null,
+      "icon": "",
+      "iconColor": "",
+      "iconSize": 40,
+      "interval": 5,
+      "items": [],
+      "images": []
+    },
+    {
+      "id": "kayttotapaukset",
+      "pluginData": {},
+      "templateId": "s-dbcb725b6c6fc4d4be371653",
+      "content": {},
+      "type": "custom",
+      "eyebrow": "",
+      "title": "",
+      "text": "",
+      "html": "",
+      "buttonLabel": "",
+      "buttonUrl": "",
+      "image": "",
+      "imagePosition": "50% 50%",
+      "email": "",
+      "phone": "",
+      "form": null,
+      "icon": "",
+      "iconColor": "",
+      "iconSize": 40,
+      "interval": 5,
+      "items": [],
+      "images": []
+    },
+    {
+      "id": "visuaalinen-esittely",
+      "pluginData": {},
+      "templateId": "s-7f5c8e147afd19bff461f7c0",
+      "content": {},
+      "type": "custom",
+      "eyebrow": "",
+      "title": "",
+      "text": "",
+      "html": "",
+      "buttonLabel": "",
+      "buttonUrl": "",
+      "image": "",
+      "imagePosition": "50% 50%",
+      "email": "",
+      "phone": "",
+      "form": null,
+      "icon": "",
+      "iconColor": "",
+      "iconSize": 40,
+      "interval": 5,
+      "items": [],
+      "images": []
+    },
+    {
+      "id": "ukk",
+      "pluginData": {},
+      "templateId": "s-cac058e87047239408c877b9",
+      "content": {},
+      "type": "custom",
+      "eyebrow": "",
+      "title": "",
+      "text": "",
+      "html": "",
+      "buttonLabel": "",
+      "buttonUrl": "",
+      "image": "",
+      "imagePosition": "50% 50%",
+      "email": "",
+      "phone": "",
+      "form": null,
+      "icon": "",
+      "iconColor": "",
+      "iconSize": 40,
+      "interval": 5,
+      "items": [],
+      "images": []
+    },
+    {
+      "id": "loppu-cta",
+      "pluginData": {},
+      "templateId": "",
+      "content": {},
       "type": "cta",
-      "eyebrow": "UUSI OSIO",
-      "title": "Uusi osio",
-      "text": "",
+      "eyebrow": "",
+      "title": "Valmis rakentamaan seuraavan sivustosi?",
+      "text": "Luo modernit ja toimivat verkkosivut vaivattomasti tekoälyn avulla. Kokeile Weboileria ja vie sivustoprojektisi sujuvasti maaliin.",
       "html": "",
-      "buttonLabel": "Lue lisää",
-      "buttonUrl": "#",
+      "buttonLabel": "Kokeile työkalua",
+      "buttonUrl": "/",
       "image": "",
       "imagePosition": "50% 50%",
       "email": "",
       "phone": "",
       "form": null,
       "icon": "",
-      "iconColor": "#f29a2e",
+      "iconColor": "",
+      "iconSize": 40,
+      "interval": 5,
+      "items": [],
+      "images": []
+    },
+    {
+      "id": "alatunniste",
+      "pluginData": {},
+      "templateId": "s-a0e40091c7e64507bd10748b",
+      "content": {},
+      "type": "custom",
+      "eyebrow": "",
+      "title": "",
+      "text": "",
+      "html": "",
+      "buttonLabel": "",
+      "buttonUrl": "",
+      "image": "",
+      "imagePosition": "50% 50%",
+      "email": "",
+      "phone": "",
+      "form": null,
+      "icon": "",
+      "iconColor": "",
       "iconSize": 40,
       "interval": 5,
       "items": [],

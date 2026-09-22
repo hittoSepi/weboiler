@@ -194,6 +194,8 @@ Syntaksitarkistus kattaa kaikki projektin JavaScript-tiedostot. HTTP-testit suor
 Käyttöliittymän eristettyä kokeilua varten `node test/preview-server.js` käynnistää testikopion porttiin 3191. Sen tunnukset ovat vain testipalvelimen lähdekoodissa. Sulje testipalvelin Ctrl+C:llä.
 # Blogin ja referenssien kieliversiot
 
+Tuotteet-lisäosa löytyy omalta `/admin/tuotteet`-sivulta. Ota se käyttöön, lisää tuotteita ja käytä editorin Tuotelista- tai Tuotenosto-osiota. Muutokset tulevat julkisiksi vasta julkaisemalla. API-tuonnin asetukset ja vastausmuoto on dokumentoitu tiedostossa `plugins/README.md`; osoite ja Bearer-avain määritellään palvelimen ympäristömuuttujiin.
+
 Lisäosien artikkeleilla ja projekteilla on **Kieli** ja **Käännösryhmä**. Luo jokaiselle käännökselle oma kohde ja yksilöllinen osoitetunniste. Anna saman sisällön kieliversioille sama käännösryhmä, esimerkiksi `yritysuutinen`, sekä eri kielet, esimerkiksi `fi` ja `en`. Tyhjä kieli saa tallennuksessa sivuston oletuskielen; tyhjä ryhmä muodostetaan kohteen tunnisteesta.
 
 Listaosiot näyttävät sivun kielen kohteet. Kohdesivujen kielivalikko ja hakukoneiden hreflang-linkit yhdistävät käännökset. Luonnoksia ja tulevaisuuteen ajastettuja artikkeleita ei linkitetä julkiselta sivulta. Kirjautuneen esikatselussa myös niiden käännökset ovat käytettävissä. Saman kielen home-ryhmän sivulta käytetään valikkoa ja alatunnistetta, jos sellainen on määritelty.

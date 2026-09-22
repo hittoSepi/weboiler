@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const helper=require('../lib/theme-ai');
+const theme={background:'#07101c',surface:'#101b2a',text:'#ffffff',muted:'#aab4c1',accent:'#ff8800',font:'Arial, sans-serif',headingFont:'Georgia, serif',maxWidth:1280,radius:8};
+assert.deepEqual(helper.validate(JSON.stringify(theme)),theme);
+assert.ok(!helper.prepare({...theme,secret:'SECRET'},{prompt:'Tumma teema'}).includes('SECRET'));
+assert.throws(()=>helper.prepare(theme,{prompt:''}));
+assert.throws(()=>helper.prepare(theme,{prompt:'x'.repeat(6001)}));
+for(const value of [null,[],{},'bad',{...theme,extra:'bad'},{...theme,background:''},{...theme,text:'red'},{...theme,font:'Arial; color:red'},{...theme,maxWidth:1801},{...theme,radius:-1},{...theme,radius:'8'},{...theme,headingFont:null}])assert.throws(()=>helper.validate(JSON.stringify(value)));
+assert.throws(()=>helper.validate('{invalid'));
+console.log('Theme AI tests OK (strict fields, safe styles, ranges, minimal context)');

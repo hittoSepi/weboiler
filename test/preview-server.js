@@ -32,6 +32,34 @@ if(process.argv.includes('--embed-audit')){
   }
   for(const file of [process.env.EDITOR_SITE_FILE,process.env.LIVE_SITE_FILE])fs.writeFileSync(file,JSON.stringify(fixture));
 }
+if(process.argv.includes('--mock-section-ai')){
+  for(const file of [process.env.EDITOR_SITE_FILE,process.env.LIVE_SITE_FILE])fs.writeFileSync(file,JSON.stringify(require('./site-ai-fixture')));
+  const createAI=require('../lib/ai');
+  require.cache[require.resolve('../lib/ai')].exports=options=>{
+    const ai=createAI(options);ai.saveSettings({...ai.publicSettings(),enabled:true,openaiKey:'fake-local-test-key'});
+    return {...ai,generate:async(kind,input)=>{
+      if(input.prompt.startsWith('Edit the copy'))return {text:JSON.stringify({title:'AI-muokattu otsikko',text:'Selkeämpi esittely.'})};
+      const template=JSON.parse(input.prompt.split('Current template: ')[1].split('\nUser request:')[0]);
+      template.root.style.gap=48;
+      return {text:JSON.stringify(template)};
+    }};
+  };
+}
+if(process.argv.includes('--mock-site-ai')){
+  const createAI=require('../lib/ai');
+  require.cache[require.resolve('../lib/ai')].exports=options=>{
+    const ai=createAI(options);ai.saveSettings({...ai.publicSettings(),enabled:true,openaiKey:'fake-local-test-key'});
+    return {...ai,generate:async(kind,input,structured,options={})=>{
+      const fixture=require('./site-ai-fixture');let value=fixture;
+      if(options.stage==='Suunnitelma')value={siteName:'Vaihetesti',title:'Vaihetesti',description:'Testi',style:'Tumma sininen',elements:[{id:'card',name:'Kortti',brief:'Tekstikortti'}],pages:[{id:'home',slug:'',title:'Etusivu',description:'',sections:[{id:'hero',type:'hero',title:'Avaus',brief:'Testiteksti',elementIds:[]},{id:'cards',type:'custom',title:'Kortit',brief:'Kortit ja kuva',elementIds:['card']}]}]};
+      else if(options.stage==='Teema')value=fixture.theme;
+      else if(options.stage?.startsWith('Elementti:'))value=fixture.builder.elements[0];
+      else if(options.stage==='Etusivu / Kortit')value=fixture.builder.sections[0];
+      else if(options.stage)value={id:'hero',type:'hero',title:'Vaihetesti',text:'Testiteksti'};
+      return kind==='image'?{src:'https://placehold.co/800x600/png?text=Testikuva'}:{text:JSON.stringify(value)};
+    }};
+  };
+}
 if(process.argv.includes('--mock-ai')) {
   const createAI=require('../lib/ai');
   require.cache[require.resolve('../lib/ai')].exports=options=>{
@@ -40,6 +68,7 @@ if(process.argv.includes('--mock-ai')) {
     return ai;
   };
 }
+if(process.argv.includes('--mock-products'))require('../lib/integration-http').getJSON=async()=>({products:[{id:'api-test',slug:'api-test',title:'API-testituote',price:'39 €',text:'Synteettinen integraatiotesti'}]});
 const server = require('../server').listen(3191,'127.0.0.1',()=>console.log('Isolated browser test: http://127.0.0.1:3191'));
 function close() {server.close(()=>{fs.rmSync(root,{recursive:true,force:true});process.exit(0);});}
 process.on('SIGINT',close);

@@ -1,0 +1,26 @@
+'use strict';
+const assert=require('node:assert/strict'),helper=require('../lib/site-ai'),fixture=require('./site-ai-fixture');
+const current={meta:{siteUrl:'https://example.test',logo:'/uploads/logo.png'},plugins:{test:'keep'},sections:[],pages:[]};
+const run=value=>helper.validate(JSON.stringify(value),current,x=>x);
+const result=run(fixture);
+assert.equal(result.meta.siteUrl,current.meta.siteUrl);assert.equal(result.meta.logo,current.meta.logo);assert.deepEqual(result.plugins,current.plugins);
+assert.equal(result.navigation[1].target,'/palvelut');assert.equal(result.builder.elements.length,1);
+assert.equal(helper.images(result).length,2);assert.match(result.sections[0].image,/^https:\/\/placehold.co\/1600x900\/png/);
+assert.match(result.builder.sections[0].root.children[1].defaults.image,/placehold.co\/800x600/);
+assert.throws(()=>helper.validate('invalid',current,x=>x));assert.throws(()=>helper.prepare({prompt:''}));
+for(const mutate of [s=>s.pages=Array(6).fill(s.pages[0]),s=>s.sections=[],s=>s.sections[1].templateId='missing',s=>s.builder.elements[0].root.type='script',s=>s.sections[0].type='unknown',s=>s.theme.radius=100]){const copy=structuredClone(fixture);mutate(copy);assert.throws(()=>run(copy));}
+const malicious=structuredClone(fixture);malicious.meta.siteUrl='https://evil.test';malicious.plugins={test:'replace'};assert.equal(run(malicious).meta.siteUrl,current.meta.siteUrl);assert.deepEqual(run(malicious).plugins,current.plugins);
+console.log('Site AI tests OK (templates, image slots, placeholders, preserved settings, invalid proposals)');
+const marketing=structuredClone(fixture);
+marketing.sections=Array.from({length:6},(_,i)=>({id:'home-'+i,type:i===0?'hero':'text',title:'Etusivun osio',text:'Sisältö'}));
+marketing.pages=[{id:'contact',slug:'yhteys',title:'Ota yhteyttä',sections:Array.from({length:3},(_,i)=>({id:'contact-'+i,type:i===1?'contact':'text',title:'Yhteys'}))}];
+assert.equal(run(marketing).sections.length,6);assert.equal(run(marketing).pages[0].sections.length,3);
+const misplaced=structuredClone(marketing);misplaced.pages.unshift({id:'home',slug:'/',sections:misplaced.sections});delete misplaced.sections;
+assert.equal(run(misplaced).sections.length,6);assert.equal(run(misplaced).pages.length,1);
+assert.equal(helper.validate('```json\n'+JSON.stringify(marketing)+'\n```',current,x=>x).sections.length,6);
+const missing=structuredClone(marketing);delete missing.pages[0].sections;assert.throws(()=>run(missing),/Alasivu 1.*puuttuu sections/);
+const excess=structuredClone(marketing);excess.sections=Array.from({length:9},(_,i)=>({id:'s'+i,type:'text'}));assert.throws(()=>run(excess),/Etusivu.*9 osiota/);
+assert.match(helper.enhancePrompt({prompt:'WEBOILER markkinointisivu'}),/WEBOILER markkinointisivu/);
+for(const prompt of ['', ' ',null,{},'x'.repeat(10001)])assert.throws(()=>helper.enhancePrompt({prompt}));
+assert.equal(helper.enhancedPrompt('{"prompt":"  Paranneltu kuvaus  "}'),'Paranneltu kuvaus');
+for(const text of ['invalid','null','{}','{"prompt":""}',JSON.stringify({prompt:'x'.repeat(10001)})])assert.throws(()=>helper.enhancedPrompt(text));

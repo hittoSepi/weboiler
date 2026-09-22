@@ -7,6 +7,21 @@ for(const [key,file] of Object.entries({EDITOR_SITE_FILE:'draft.json',LIVE_SITE_
 const fixture={meta:{siteName:'Testi',title:'Etusivu',siteUrl:'https://example.test',description:''},theme:{background:'#000000',surface:'#111111',text:'#ffffff',muted:'#aaaaaa',accent:'#ff8800',font:'Arial',headingFont:'Arial',maxWidth:1280,radius:0},sections:[{id:'home-section',type:'text',title:'Vain etusivulla',text:'Hei'}],navigation:[],elements:[],footer:{text:'Testi'}};
 fs.writeFileSync(process.env.EDITOR_SITE_FILE,JSON.stringify(fixture));fs.writeFileSync(process.env.LIVE_SITE_FILE,JSON.stringify(fixture));
 async function run(){
+ const createAI=require('../lib/ai');
+ require.cache[require.resolve('../lib/ai')].exports=options=>{
+  const ai=createAI(options);
+  return {...ai,generate:async(kind,input,structured)=>{
+   if(kind==='image')return {src:'/uploads/fixture.png'};
+   assert.equal(structured,true);assert.equal(kind,'text');
+   if(input.prompt.startsWith('Edit the copy of ONE'))return {text:JSON.stringify({title:'Osion AI-muutos',text:'Tiivistetty sisältö'})};
+   if(input.prompt.startsWith('Plan a Weboiler'))return {text:JSON.stringify({siteName:'Vaihesivu',title:'Vaihesivu',description:'',style:'Tumma',elements:[],pages:[{id:'home',slug:'',title:'Etusivu',description:'',sections:[{id:'hero',type:'hero',title:'Avaus',brief:'Avaus',elementIds:[]}]}]})};
+   if(input.prompt.startsWith('Create ONE Weboiler'))return {text:JSON.stringify({id:'hero',type:'hero',title:'Vaihetesti',text:'Valmis'})};
+   if(input.prompt.startsWith('Improve a website creation brief.'))return {text:JSON.stringify({prompt:'Luo selkeä yhden sivun markkinointisivusto. Käytä vain annettuja tuotetietoja.'})};
+   if(input.prompt.startsWith('Create a complete Weboiler'))return {text:JSON.stringify(require('./site-ai-fixture'))};
+   if(input.prompt.startsWith('Create a Weboiler theme'))return {text:JSON.stringify({...fixture.theme,accent:'#ee9900',radius:12})};
+   return {text:JSON.stringify({name:'AI HTTP testi',root:{id:'ai-root',type:'heading',defaults:{value:'AI ehdotus'},children:[]}})};
+  }};
+ };
  const server=require('../server').listen(0,'127.0.0.1');await new Promise(resolve=>server.once('listening',resolve));
   const base='http://127.0.0.1:'+server.address().port;
  try{
@@ -20,6 +35,9 @@ async function run(){
   assert.equal((await fetch(base+'/media/missing.png/640')).status,404);
   let response=await fetch(base+'/api/admin/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:'test-admin',password:'test-password'})});
   const cookie=response.headers.get('set-cookie').split(';')[0];
+  assert.equal((await fetch(base+'/admin/tuotteet',{headers:{cookie}})).status,200);
+  assert.equal((await fetch(base+'/api/admin/plugins/products/integrations/import',{method:'POST'})).status,401);
+  assert.equal((await fetch(base+'/api/admin/plugins/products/integrations/import',{method:'POST',headers:{cookie}})).status,403);
   assert.equal((await fetch(base+'/admin/teema',{headers:{cookie}})).status,200);
   const adminSource=fs.readFileSync(path.join(__dirname,'../public/admin.js'),'utf8');
   const themeUI={app:{innerHTML:''},site:fixture,mail:{},auth:{},esc:value=>String(value??''),field:(key)=>`<input data-path="${key}">`};
@@ -29,6 +47,28 @@ async function run(){
   vm.runInContext('renderSettings()',themeUI);assert.doesNotMatch(themeUI.app.innerHTML,/data-path="theme\./);assert.match(themeUI.app.innerHTML,/mail-form/);assert.match(themeUI.app.innerHTML,/meta.siteName/);
   let snapshot=await (await fetch(base+'/api/admin/session',{headers:{cookie}})).json();
   const headers=()=>({cookie,'content-type':'application/json','x-csrf-token':snapshot.csrf,'x-site-version':snapshot.version});
+  assert.equal((await fetch(base+'/api/admin/ai/layout',{method:'POST'})).status,401);
+  assert.equal((await fetch(base+'/api/admin/ai/layout',{method:'POST',headers:{cookie}})).status,403);
+  const draftBefore=fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),liveBefore=fs.readFileSync(process.env.LIVE_SITE_FILE,'utf8');
+  assert.equal((await fetch(base+'/api/admin/ai/section',{method:'POST'})).status,401);
+  assert.equal((await fetch(base+'/api/admin/ai/section',{method:'POST',headers:{cookie}})).status,403);
+  const sectionRequest={pageId:'home',sectionId:'home-section',prompt:'Tiivistä'};
+  const sectionResponse=await fetch(base+'/api/admin/ai/section',{method:'POST',headers:headers(),body:JSON.stringify(sectionRequest)});
+  assert.equal(sectionResponse.status,200);const sectionProposal=await sectionResponse.json();
+  assert.equal(sectionProposal.section.id,'home-section');assert.match(sectionProposal.preview,/Osion AI-muutos/);
+  assert.equal((await fetch(base+'/api/admin/ai/section',{method:'POST',headers:{...headers(),'x-site-version':'stale'},body:JSON.stringify(sectionRequest)})).status,409);
+  assert.equal(fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),draftBefore);assert.equal(fs.readFileSync(process.env.LIVE_SITE_FILE,'utf8'),liveBefore);
+  const generated=await fetch(base+'/api/admin/ai/layout',{method:'POST',headers:headers(),body:JSON.stringify({kind:'sections',prompt:'Otsikko'})});
+  assert.equal(generated.status,200);const proposal=await generated.json();assert.match(proposal.preview,/AI ehdotus/);assert.equal(proposal.template.name,'AI HTTP testi');
+  assert.equal(fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),draftBefore);assert.equal(fs.readFileSync(process.env.LIVE_SITE_FILE,'utf8'),liveBefore);
+  assert.equal((await fetch(base+'/api/admin/ai/layout',{method:'POST',headers:{...headers(),'x-site-version':'stale'},body:JSON.stringify({kind:'sections',prompt:'Otsikko'})})).status,409);
+  assert.equal((await fetch(base+'/api/admin/ai/theme',{method:'POST'})).status,401);
+  assert.equal((await fetch(base+'/api/admin/ai/theme',{method:'POST',headers:{cookie}})).status,403);
+  const themed=await fetch(base+'/api/admin/ai/theme',{method:'POST',headers:headers(),body:JSON.stringify({prompt:'Oranssi teema'})});
+  assert.equal(themed.status,200);const themeProposal=await themed.json();assert.equal(themeProposal.theme.accent,'#ee9900');assert.match(themeProposal.preview,/#ee9900/);
+  assert.equal(fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),draftBefore);assert.equal(fs.readFileSync(process.env.LIVE_SITE_FILE,'utf8'),liveBefore);
+  assert.equal((await fetch(base+'/api/admin/ai/theme',{method:'POST',headers:{...headers(),'x-site-version':'stale'},body:JSON.stringify({prompt:'Teema'})})).status,409);
+  assert.equal((await fetch(base+'/api/admin/ai/theme',{method:'POST',headers:headers(),body:JSON.stringify({prompt:''})})).status,400);
   const put=site=>fetch(base+'/api/admin/site',{method:'PUT',headers:headers(),body:JSON.stringify(site)});
   const site=structuredClone(snapshot.site);site.pages=[{id:'services',slug:'palvelut',title:'Palvelusivu',description:'Palvelujen kuvaus',sections:[{id:'home-section',type:'text',title:'Vain alasivulla',text:'Palvelut'}]}];
   site.meta.shareImage='/uploads/fixture.png';site.meta.shareImageAlt='Sivuston oletus';site.pages[0].shareImage='/uploads/page.png';site.pages[0].shareImageAlt='Oma jakokuva';
@@ -116,7 +156,54 @@ async function run(){
   const fullBundle=await (await fetch(base+'/api/admin/export',{headers:{cookie}})).json();assert.equal(fullBundle.site.plugins.content.people[0].title,'Testihenkilö');assert.equal(fullBundle.site.pages.at(-1).locale,'en');assert.equal(fullBundle.site.sections.find(x=>x.id==='custom-contact').form.recipient,'form@example.test');
   const fullUpload=new FormData();fullUpload.append('bundle',new Blob([JSON.stringify(fullBundle)],{type:'application/json'}),'full.json');
   response=await fetch(base+'/api/admin/import/inspect',{method:'POST',headers:{cookie,'x-csrf-token':snapshot.csrf},body:fullUpload});assert.equal(response.status,200);
-  console.log('Pages tests OK (routes, preview, validation, publish, history, transfer, blog, forms, languages, content sections)');
+  snapshot={...snapshot,...await (await fetch(base+'/api/admin/session',{headers:{cookie}})).json()};
+  const layoutSite=structuredClone(snapshot.site);layoutSite.builder={elements:[],sections:[{id:'template',name:'Testipohja',root:{id:'heading',type:'heading',defaults:{value:'Pohjan oletus'},children:[]}}]};layoutSite.sections.push({id:'layout',type:'custom',templateId:'template',content:{heading:{value:'Oma sisältö'}}});
+  response=await put(layoutSite);assert.equal(response.status,200);snapshot={...snapshot,...await response.json()};
+  assert.doesNotMatch(await (await fetch(base+'/')).text(),/Oma sisältö/);
+  assert.match(await (await fetch(base+'/admin/esikatselu',{headers:{cookie}})).text(),/Oma sisältö/);
+  assert.equal((await fetch(base+'/admin/rakenne-esikatselu?kind=sections&id=template',{redirect:'manual'})).status,302);
+  assert.match(await (await fetch(base+'/admin/rakenne-esikatselu?kind=sections&id=template',{headers:{cookie}})).text(),/Pohjan oletus/);
+  assert.equal((await fetch(base+'/api/admin/publish',{method:'POST',headers:headers(),body:'{}'})).status,200);
+  assert.match(await (await fetch(base+'/')).text(),/Oma sisältö/);
+  const layoutBundle=await (await fetch(base+'/api/admin/export',{headers:{cookie}})).json();assert.equal(layoutBundle.site.builder.sections[0].id,'template');
+  const beforeWizard=fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),liveWizard=fs.readFileSync(process.env.LIVE_SITE_FILE,'utf8');
+  const wizardPost=(suffix,data,extra={})=>fetch(base+'/api/admin/ai/site'+suffix,{method:'POST',headers:{...headers(),...extra},body:JSON.stringify(data)});
+  assert.equal((await fetch(base+'/api/admin/ai/site/enhance',{method:'POST'})).status,401);
+  assert.equal((await fetch(base+'/api/admin/ai/site/enhance',{method:'POST',headers:{cookie}})).status,403);
+  assert.equal((await wizardPost('/enhance',{prompt:''})).status,400);
+  response=await wizardPost('/enhance',{prompt:'WEBOILER markkinointisivu',provider:'gemini'});assert.equal(response.status,200);assert.match((await response.json()).prompt,/markkinointisivusto/);
+  assert.equal(fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),beforeWizard);assert.equal(fs.readFileSync(process.env.LIVE_SITE_FILE,'utf8'),liveWizard);
+  assert.equal((await fetch(base+'/api/admin/ai/site',{method:'POST'})).status,401);
+  assert.equal((await fetch(base+'/api/admin/ai/site',{method:'POST',headers:{cookie}})).status,403);
+  assert.equal((await wizardPost('',{prompt:'Testi'},{'x-site-version':'stale'})).status,409);
+  response=await wizardPost('',{prompt:'Testisivusto'});assert.equal(response.status,200);const wizard=await response.json();
+  assert.equal(wizard.previews.length,2);assert.equal(wizard.images.length,2);assert.match(wizard.previews[0].html,/placehold.co/);
+  assert.equal(fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),beforeWizard);
+  assert.equal((await wizardPost('/apply',{token:wizard.token})).status,400);
+  assert.equal((await wizardPost('/image',{token:wizard.token,imageId:'missing',prompt:'kuva'})).status,400);
+  response=await wizardPost('/image',{token:wizard.token,imageId:wizard.images[0].id,prompt:'Kuvitus'});assert.equal(response.status,200);const withImage=await response.json();assert.equal(withImage.images[0].src,'/uploads/fixture.png');assert.match(withImage.images[1].src,/placehold.co/);
+  assert.equal(fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),beforeWizard);
+  response=await wizardPost('/apply',{token:wizard.token,confirm:true});assert.equal(response.status,200);snapshot={...snapshot,...await response.json()};assert.equal(snapshot.site.meta.siteName,'Velhotesti');assert.equal(snapshot.site.sections[0].image,'/uploads/fixture.png');
+  assert.equal(fs.readFileSync(process.env.LIVE_SITE_FILE,'utf8'),liveWizard);
+  assert.equal((await wizardPost('/apply',{token:wizard.token,confirm:true})).status,400);
+  const wizardHistory=await (await fetch(base+'/api/admin/history',{headers:{cookie}})).json();assert.ok(wizardHistory.entries.some(e=>e.kind==='before-import'));
+  response=await wizardPost('',{prompt:'Toinen'});const staleWizard=await response.json();
+  response=await put({...snapshot.site,footer:{text:'Changed after generation'}});snapshot={...snapshot,...await response.json()};
+  assert.equal((await wizardPost('/apply',{token:staleWizard.token,confirm:true})).status,409);
+  const workflowPost=(suffix,data)=>fetch(base+'/api/admin/ai/workflows'+suffix,{method:'POST',headers:headers(),body:JSON.stringify(data)});
+  assert.equal((await fetch(base+'/api/admin/ai/workflows')).status,401);
+  assert.equal((await fetch(base+'/api/admin/ai/workflows',{method:'POST',headers:{cookie}})).status,403);
+  const beforeStages=fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8');
+  response=await workflowPost('',{prompt:'Vaihetesti'});assert.equal(response.status,200);let job=await response.json();
+  response=await workflowPost('/'+job.id+'/step',{expectedStep:0});job=await response.json();assert.equal(job.status,'review');
+  response=await workflowPost('/'+job.id+'/approve',{plan:job.plan});job=await response.json();
+  while(job.status!=='ready'){response=await workflowPost('/'+job.id+'/step',{expectedStep:job.completed});assert.equal(response.status,200);job=await response.json();}
+  assert.ok(job.proposal.previews[0].html.includes('Vaihetesti'));
+  assert.equal(fs.readFileSync(process.env.EDITOR_SITE_FILE,'utf8'),beforeStages);
+  response=await wizardPost('/apply',{token:job.proposal.token,confirm:true});assert.equal(response.status,200);
+  assert.equal(fs.readFileSync(process.env.LIVE_SITE_FILE,'utf8'),liveWizard);
+  const finished=await (await fetch(base+'/api/admin/ai/workflows/'+job.id,{headers:{cookie}})).json();assert.equal(finished.status,'applied');
+  console.log('Pages tests OK (including staged AI routes, approval, assembly and draft/live isolation)');
  }finally{await new Promise(resolve=>server.close(resolve));fs.rmSync(root,{recursive:true,force:true});}
 }
 run().catch(error=>{console.error(error);process.exitCode=1;});

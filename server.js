@@ -68,8 +68,9 @@ function cleanSite(input) {
   validate.list(input.navigation,50,'Navigaatio');
   validate.list(input.elements,40,'Omat elementit');
   require('./lib/languages').validate({...input,meta:input.meta||{},pages:input.pages||[]});
-  const allowed = new Set(['hero','text','features','gallery','carousel','cta','contact',...plugins.types()]);
+  const allowed = new Set([...require('./lib/ai-capabilities').sectionTypes,...plugins.types()]);
   return {
+    builder:require('./lib/layout-builder').clean(input.builder),
     pages:validatePages(input.pages,sections=>cleanSite({sections}).sections),
     plugins:plugins.clean(input.plugins,require('./lib/languages').locale(input.meta?.locale)),
     meta: { locale:require('./lib/languages').locale(input.meta?.locale), ...require('./lib/seo').fields(input.meta), siteName:text(input.meta?.siteName,80), title:text(input.meta?.title,140), description:text(input.meta?.description,300), siteUrl:text(input.meta?.siteUrl,500), logo:validate.url(input.meta?.logo,true), logoAlt:text(input.meta?.logoAlt,120) },
@@ -78,6 +79,8 @@ function cleanSite(input) {
     sections: input.sections.slice(0, 30).map((section) => ({
       id: text(section.id, 80).replace(/[^a-zA-Z0-9_-]/g, '-'),
       pluginData:plugins.cleanSection(section),
+      templateId:text(section.templateId,80),
+      content:require('./lib/layout-builder').content(section.content),
       type: allowed.has(section.type) ? section.type : (()=>{throw new Error('Tuntematon osiotyyppi.');})(),
       eyebrow: text(section.eyebrow, 100),
       title: text(section.title, 180),
@@ -149,7 +152,7 @@ app.get('/',(_req,res)=>res.type('html').send(renderSite(readLiveSite())));
 app.get('/admin/login',(_req,res)=>res.sendFile(path.join(PUBLIC,'login.html')));
 app.use(['/admin', '/api/admin'], (_req,res,next)=>{res.setHeader('Cache-Control','no-store');next();});
 app.get('/admin/esikatselu',(req,res)=>{if(!session(req))return res.redirect('/admin/login');const draft=readEditorSite();const site=req.query.plugin?plugins.detail(draft,req.query.plugin,req.query.item,{preview:true}):selectPage(draft,req.query.page||'');if(!site)return res.status(404).send('Sivua ei löytynyt.');res.set('X-Robots-Tag','noindex, nofollow').type('html').send(renderSite(site,{preview:true}));});
-app.get(['/admin','/admin/yhteydenotot','/admin/editori','/admin/elementit','/admin/media','/admin/teema','/admin/asetukset','/admin/historia','/admin/plugins','/admin/siirto'],(req,res)=>session(req)?res.sendFile(path.join(PUBLIC,'admin.html')):res.redirect('/admin/login'));
+app.get(['/admin','/admin/yhteydenotot','/admin/editori','/admin/elementit','/admin/osiot','/admin/media','/admin/teema','/admin/asetukset','/admin/historia','/admin/plugins','/admin/siirto'],(req,res)=>session(req)?res.sendFile(path.join(PUBLIC,'admin.html')):res.redirect('/admin/login'));
 app.get('/admin/historia/:id',(req,res)=>{if(!session(req))return res.redirect('/admin/login');try{const snapshot=siteStore.historyEntry(req.params.id).site;const site=req.query.plugin?plugins.detail(snapshot,req.query.plugin,req.query.item,{preview:true}):selectPage(snapshot,req.query.page||'');if(!site)return res.status(404).send('Sivua ei löytynyt.');res.set('X-Robots-Tag','noindex, nofollow').type('html').send(renderSite(site,{preview:true,previewBase:'/admin/historia/'+req.params.id}));}catch(error){res.status(error.status||400).type('text').send(error.message);}});
 app.post('/api/analytics/visit',(req,res)=>{analytics.record(req.body||{});res.status(204).end();});
 app.post('/api/contact',async(req,res)=>{try{if(text(req.body.website,100))return res.status(201).json({ok:true});const custom=req.body.formId?require('./lib/forms').submission(readLiveSite(),req.body):null;const message={id:crypto.randomUUID(),createdAt:new Date().toISOString(),name:text(req.body.name,120),email:text(req.body.email,200),phone:text(req.body.phone,60),message:text(req.body.message,3000),...(custom?.message||{})};if(!custom&&(!message.name||!message.message||(!message.email&&!message.phone)))throw new Error('Täytä nimi, viesti ja yhteystieto.');const list=readJson(MESSAGE_FILE,[]);list.unshift(message);writeJson(MESSAGE_FILE,list);res.status(201).json({ok:true});setImmediate(()=>mailer.sendContact(message,custom?.recipient||'').catch(console.error));}catch(error){res.status(400).json({error:error.message});}});
@@ -171,6 +174,15 @@ app.post('/api/admin/login',(req,res)=>{
 });
 app.get('/api/admin/session',requireAuth,(req,res)=>res.json({csrf:req.session.csrf,...siteStore.snapshot()}));
 app.get('/api/admin/plugins',requireAuth,(_req,res)=>res.json({plugins:plugins.catalog()}));
+app.get('/admin/rakenne-esikatselu',(req,res)=>{
+  if(!session(req))return res.redirect('/admin/login');
+  const site=readEditorSite(),kind=req.query.kind==='elements'?'elements':'sections';
+  const template=site.builder?.[kind]?.find(t=>t.id===req.query.id);if(!template)return res.status(404).send('Pohjaa ei löydy.');
+  const preview={...site,builder:{...site.builder,sections:[template]},sections:[{id:'layout-preview',type:'custom',templateId:template.id,content:{}}]};
+  res.set('X-Robots-Tag','noindex, nofollow').type('html').send(renderSite(preview,{preview:true}));
+});
+for(const plugin of plugins.catalog())if(plugin.adminPage)app.get('/admin/'+plugin.adminPage.slug,(req,res)=>session(req)?res.sendFile(path.join(PUBLIC,'admin.html')):res.redirect('/admin/login'));
+app.post('/api/admin/plugins/:id/integrations/:action',requireAuth,csrf,async(req,res)=>{try{res.json(await plugins.runIntegration(req.params.id,req.params.action));}catch(error){res.status(error.status||400).json({error:error.message});}});
 app.get('/api/admin/export',requireAuth,async(req,res)=>{try{const bundle=await siteTransfer.exportBundle(req.query.source||'draft');res.attachment('weboiler-site.json').json(bundle);}catch(error){res.status(400).json({error:error.message});}});
 const bundleUpload=multer({storage:multer.memoryStorage(),limits:{fileSize:48*1024*1024,files:1,fields:0}}).single('bundle');
 app.post('/api/admin/import/:action',requireAuth,csrf,bundleUpload,async(req,res)=>{try{if(!req.file)throw new Error('Valitse siirtopaketti.');const bundle=JSON.parse(req.file.buffer.toString('utf8'));if(req.params.action==='inspect')return res.json({summary:(await siteTransfer.inspect(bundle)).summary});if(req.params.action!=='apply')return res.status(404).json({error:'Tuntematon tuontitoiminto.'});res.json(await siteTransfer.importBundle(bundle,req.get('x-site-version')));}catch(error){res.status(error.status||400).json({error:error instanceof SyntaxError?'Tiedosto ei ole kelvollista JSON-dataa.':error.message});}});
@@ -187,6 +199,117 @@ app.get('/api/admin/icons',requireAuth,(_req,res)=>res.json({icons:iconNames}));
 app.get('/api/admin/mail-settings',requireAuth,(_req,res)=>res.json({settings:mailer.publicSettings()}));
 app.get('/api/admin/ai-settings',requireAuth,(_req,res)=>res.json({settings:ai.publicSettings()}));
 app.put('/api/admin/ai-settings',requireAuth,csrf,(req,res)=>{try{res.json({settings:ai.saveSettings(req.body)});}catch(error){res.status(400).json({error:error.message});}});
+const siteAIProposals=new Map();
+const siteWorkflow=require('./lib/site-ai-workflow')({directory:path.join(path.dirname(EDITOR_SITE_FILE),'ai-workflows'),ai,store:siteStore,clean:cleanSite});
+function workflowResult(id,req){
+  const job=siteWorkflow.read(id),result=siteWorkflow.view(job);
+  if(job.status==='ready'){
+    if(!siteAIProposals.get(id)?.busy)siteAIProposals.set(id,{owner:req.session.csrf,version:job.version,site:job.site,jobId:id,expires:Date.now()+30*60*1000});
+    result.proposal=siteAIResult(id,job.site);
+  }
+  return result;
+}
+app.get('/api/admin/ai/workflows',requireAuth,(_req,res)=>{try{res.json({jobs:siteWorkflow.list()});}catch(error){res.status(400).json({error:error.message});}});
+app.get('/api/admin/ai/workflows/:id',requireAuth,(req,res)=>{try{res.json(workflowResult(req.params.id,req));}catch(error){res.status(400).json({error:error.message});}});
+app.post('/api/admin/ai/workflows',requireAuth,csrf,(req,res)=>{try{res.json(siteWorkflow.create(req.body,req.get('x-site-version')));}catch(error){res.status(error.status||400).json({error:error.message});}});
+app.post('/api/admin/ai/workflows/:id/approve',requireAuth,csrf,(req,res)=>{try{siteWorkflow.approve(req.params.id,req.body.plan);res.json(workflowResult(req.params.id,req));}catch(error){res.status(error.status||400).json({error:error.message});}});
+app.post('/api/admin/ai/workflows/:id/step',requireAuth,csrf,async(req,res)=>{try{await siteWorkflow.step(req.params.id,req.body.expectedStep);res.json(workflowResult(req.params.id,req));}catch(error){res.status(error.status||400).json({error:error.message});}});
+function pruneSiteAI(){for(const [key,value]of siteAIProposals)if(value.expires<Date.now())siteAIProposals.delete(key);}
+function siteAIResult(token,proposed){return {token,summary:{pages:1+proposed.pages.length,sections:[proposed,...proposed.pages].reduce((n,p)=>n+p.sections.length,0),elements:proposed.builder.elements.length,templates:proposed.builder.sections.length},images:require('./lib/site-ai').images(proposed).map(({id,label,prompt,target,key})=>({id,label,prompt,src:target[key]||''})),previews:[{title:proposed.meta.title,slug:'',html:renderSite(proposed,{preview:true})},...proposed.pages.map(p=>({title:p.title,slug:p.slug,html:renderSite(selectPage(proposed,p.slug),{preview:true})}))]};}
+app.post('/api/admin/ai/site/enhance',requireAuth,csrf,async(req,res)=>{
+  try{
+    const helper=require('./lib/site-ai');
+    const result=await ai.generate('text',{provider:req.body.provider,prompt:helper.enhancePrompt(req.body)},true);
+    res.json({prompt:helper.enhancedPrompt(result.text)});
+  }catch(error){res.status(400).json({error:error.message});}
+});
+app.post('/api/admin/ai/prompt/enhance',requireAuth,csrf,async(req,res)=>{
+  try{
+    const helper=require('./lib/prompt-enhancement');
+    const result=await ai.generate('text',{provider:req.body.provider,prompt:helper.prompt(req.body)},true,{purpose:'prompt-enhance',stage:req.body.kind});
+    res.json({prompt:helper.result(result.text)});
+  }catch(error){res.status(400).json({error:error.message});}
+});
+app.post('/api/admin/ai/site',requireAuth,csrf,async(req,res)=>{
+  try{
+    pruneSiteAI();
+    const snapshot=siteStore.snapshot();
+    if(req.get('x-site-version')!==snapshot.version)return res.status(409).json({error:'Luonnos muuttui. Avaa velho uudelleen.'});
+    const helper=require('./lib/site-ai');
+    const result=await ai.generate('text',{provider:req.body.provider,prompt:helper.prepare(req.body)},true,{purpose:'site'});
+    const proposed=helper.validate(result.text,snapshot.site,cleanSite);
+    helper.images(proposed);
+    if(siteStore.snapshot().version!==snapshot.version)return res.status(409).json({error:'Luonnos muuttui generoinnin aikana. Avaa velho uudelleen.'});
+    for(const [key,value]of siteAIProposals)if(value.owner===req.session.csrf)siteAIProposals.delete(key);
+    if(siteAIProposals.size>=10)siteAIProposals.delete(siteAIProposals.keys().next().value);
+    const token=crypto.randomUUID();
+    siteAIProposals.set(token,{owner:req.session.csrf,version:snapshot.version,site:proposed,expires:Date.now()+30*60*1000});
+    res.json(siteAIResult(token,proposed));
+  }catch(error){res.status(400).json({error:error.message});}
+});
+app.post('/api/admin/ai/site/image',requireAuth,csrf,async(req,res)=>{
+  let proposal,ownsBusy=false;
+  try{
+    pruneSiteAI();proposal=siteAIProposals.get(req.body.token);
+    if(!proposal||proposal.owner!==req.session.csrf)return res.status(400).json({error:'Ehdotus vanheni. Generoi uusi ehdotus.'});
+    if(proposal.busy)return res.status(409).json({error:'Kuvan generointi on kesken.'});
+    if(req.get('x-site-version')!==proposal.version||siteStore.snapshot().version!==proposal.version)return res.status(409).json({error:'Luonnos muuttui. Avaa velho uudelleen.'});
+    const slot=require('./lib/site-ai').images(proposal.site).find(s=>s.id===req.body.imageId);
+    if(!slot)throw new Error('Kuvapaikkaa ei löydy.');
+    proposal.busy=true;ownsBusy=true;
+    const result=await ai.generate('image',{provider:req.body.provider,prompt:req.body.prompt},false,{generationId:proposal.jobId,stage:'image:'+slot.id});
+    slot.target[slot.key]=result.src;proposal.expires=Date.now()+30*60*1000;
+    if(proposal.jobId)siteWorkflow.updateReady(proposal.jobId,proposal.site);
+    res.json(siteAIResult(req.body.token,proposal.site));
+  }catch(error){res.status(400).json({error:error.message});}finally{if(ownsBusy)proposal.busy=false;}
+});
+app.post('/api/admin/ai/site/apply',requireAuth,csrf,(req,res)=>{
+  try{
+    pruneSiteAI();const proposal=siteAIProposals.get(req.body.token);
+    if(!proposal||proposal.owner!==req.session.csrf)return res.status(400).json({error:'Ehdotus vanheni. Generoi uusi ehdotus.'});
+    if(proposal.busy)return res.status(409).json({error:'Odota kuvan generoinnin valmistumista.'});
+    if(req.body.confirm!==true)return res.status(400).json({error:'Vahvista luonnoksen korvaaminen.'});
+    if(req.get('x-site-version')!==proposal.version)return res.status(409).json({error:'Luonnos muuttui. Avaa velho uudelleen.'});
+    const result=siteStore.importDraft(proposal.site,proposal.version);
+    if(proposal.jobId)try{siteWorkflow.updateReady(proposal.jobId,proposal.site,true);}catch{console.warn('AI-luonnos tallennettiin, mutta työtilan loppumerkintä epäonnistui.');}
+    siteAIProposals.delete(req.body.token);res.json(result);
+  }catch(error){res.status(error.status||400).json({error:error.message});}
+});
+app.post('/api/admin/ai/theme',requireAuth,csrf,async(req,res)=>{
+  try{
+    const snapshot=siteStore.snapshot();
+    if(req.get('x-site-version')!==snapshot.version)return res.status(409).json({error:'Luonnos muuttui. Tallenna ja avaa AI uudelleen.'});
+    const helper=require('./lib/theme-ai');
+    const result=await ai.generate('text',{provider:req.body.provider,prompt:helper.prepare(snapshot.site.theme,req.body)},true);
+    const theme=helper.validate(result.text);
+    if(siteStore.snapshot().version!==snapshot.version)return res.status(409).json({error:'Luonnos muuttui generoinnin aikana. Generoi uudelleen.'});
+    res.json({theme,version:snapshot.version,preview:renderSite({...snapshot.site,theme},{preview:true})});
+  }catch(error){res.status(400).json({error:error.message});}
+});
+app.post('/api/admin/ai/section',requireAuth,csrf,async(req,res)=>{
+  try{
+    const snapshot=siteStore.snapshot();
+    if(req.get('x-site-version')!==snapshot.version)return res.status(409).json({error:'Luonnos muuttui. Avaa AI-muokkaus uudelleen.'});
+    const helper=require('./lib/section-ai'),context=helper.prepare(snapshot.site,req.body);
+    const result=await ai.generate('text',{provider:req.body.provider,prompt:context.prompt},true,{purpose:'section-edit'});
+    const proposal=helper.validate(result.text,context,snapshot.site,cleanSite);
+    if(siteStore.snapshot().version!==snapshot.version)return res.status(409).json({error:'Luonnos muuttui generoinnin aikana. Avaa AI-muokkaus uudelleen.'});
+    const builder=proposal.template?{...snapshot.site.builder,sections:[...snapshot.site.builder.sections,proposal.template]}:snapshot.site.builder;
+    res.json({...proposal,version:snapshot.version,preview:renderSite({...snapshot.site,builder,sections:[proposal.section]},{preview:true})});
+  }catch(error){res.status(400).json({error:error.message});}
+});
+app.post('/api/admin/ai/layout',requireAuth,csrf,async(req,res)=>{
+  try{
+    const snapshot=siteStore.snapshot();
+    if(req.get('x-site-version')!==snapshot.version)return res.status(409).json({error:'Luonnos muuttui. Tallenna ja avaa AI uudelleen.'});
+    const helper=require('./lib/layout-ai'),context=helper.prepare(snapshot.site,req.body);
+    const result=await ai.generate('text',{provider:req.body.provider,prompt:context.prompt},true);
+    const {template,builder}=helper.validate(result.text,context);
+    if(siteStore.snapshot().version!==snapshot.version)return res.status(409).json({error:'Luonnos muuttui generoinnin aikana. Generoi uudelleen.'});
+    const preview={...snapshot.site,builder:{...builder,sections:[template]},sections:[{id:'ai-preview',type:'custom',templateId:template.id,content:{}}]};
+    res.json({template,version:snapshot.version,preview:renderSite(preview,{preview:true})});
+  }catch(error){res.status(400).json({error:error.message});}
+});
 app.post('/api/admin/ai/:kind',requireAuth,csrf,async(req,res)=>{try{res.json(await ai.generate(req.params.kind,req.body));}catch(error){res.status(400).json({error:error.message});}});
 app.put('/api/admin/mail-settings',requireAuth,csrf,(req,res)=>{try{res.json({settings:mailer.saveSettings(req.body)});}catch(error){res.status(400).json({error:error.message});}});
 app.post('/api/admin/mail-settings/test',requireAuth,csrf,async(_req,res)=>{try{const result=await mailer.sendTest();if(result.skipped)throw new Error('Sähköpostipalvelu ei ole käytössä.');res.json({ok:true});}catch(error){res.status(400).json({error:error.message});}});

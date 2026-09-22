@@ -4,6 +4,8 @@ data/analytics.json
 data/admin-auth.json
 data/mail-settings.json
 data/ai-settings.json
+data/ai-logs/
+data/ai-workflows/
 data/history/
 data/local-secret
 data/yhteydenotot.json

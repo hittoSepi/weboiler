@@ -12,7 +12,7 @@ function recordEditorUndo(){
 function normalizeEditorUndo(){if(editorUndo.index>=0){const previous=JSON.parse(editorUndo.entries[editorUndo.index]);editorUndo.replace({...previous,site});}updateUndoControls();}
 function updateUndoControls(){
   const toolbar=document.querySelector('#undo-controls');if(!toolbar)return;
-  toolbar.hidden=!['/admin/editori','/admin/elementit','/admin/plugins','/admin/teema','/admin/asetukset'].includes(location.pathname);
+  toolbar.hidden=!pluginCatalog.some(plugin=>plugin.adminPage&&location.pathname==='/admin/'+plugin.adminPage.slug)&&!['/admin/editori','/admin/elementit','/admin/osiot','/admin/plugins','/admin/teema','/admin/asetukset'].includes(location.pathname);
   toolbar.querySelector('[data-undo]').disabled=publishing||!editorUndo.canUndo;
   toolbar.querySelector('[data-redo]').disabled=publishing||!editorUndo.canRedo;
 }
