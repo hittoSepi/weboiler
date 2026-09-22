@@ -1,0 +1,8 @@
+node_modules/
+.env
+data/analytics.json
+data/admin-auth.json
+data/mail-settings.json
+data/yhteydenotot.json
+public/uploads/*
+!public/uploads/.gitkeep

@@ -1,0 +1,24 @@
+'use strict';
+
+const esc = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char]);
+const safeUrl = (value = '') => { const url = String(value).trim(); return url.startsWith('/') || url.startsWith('#') || /^https?:\/\//i.test(url) ? esc(url) : '#'; };
+const phoneHref = (value = '') => `tel:${String(value).replace(/[^+\d]/g, '')}`;
+const paragraphs = (value = '') => esc(value).replace(/\n/g, '<br>');
+const icon = (item = {}) => item.icon ? `<i class="fa-solid fa-${esc(item.icon)} content-icon" style="--icon-color:${esc(item.iconColor || 'var(--accent)')};--icon-size:${Number(item.iconSize) || 40}px" aria-hidden="true"></i>` : '';
+
+function renderSection(section) {
+  const id = esc(section.id);
+  if (section.type === 'hero') return `<section id="${id}" class="block hero"${section.image ? ` style="--hero-image:url('${safeUrl(section.image)}')"` : ''}><div class="wrap hero-content"><p class="eyebrow">${esc(section.eyebrow)}</p>${icon(section)}<h1>${esc(section.title)}</h1><p class="lead">${paragraphs(section.text)}</p>${section.buttonLabel ? `<a class="button" href="${safeUrl(section.buttonUrl)}">${esc(section.buttonLabel)}</a>` : ''}</div></section>`;
+  if (section.type === 'features') return `<section id="${id}" class="block"><div class="wrap"><p class="eyebrow">${esc(section.eyebrow)}</p>${icon(section)}<h2>${esc(section.title)}</h2><div class="features">${(section.items || []).map((item) => `<article>${icon(item)}<h3>${esc(item.title)}</h3><p>${paragraphs(item.text)}</p></article>`).join('')}</div></div></section>`;
+  if (section.type === 'gallery') return `<section id="${id}" class="block"><div class="wrap"><p class="eyebrow">${esc(section.eyebrow)}</p>${icon(section)}<h2>${esc(section.title)}</h2><div class="gallery">${(section.images || []).map((image) => `${image.url ? `<a href="${safeUrl(image.url)}">` : ''}<img src="${safeUrl(image.src)}" alt="${esc(image.alt)}" loading="lazy">${image.url ? '</a>' : ''}`).join('')}</div></div></section>`;
+  if (section.type === 'cta') return `<section id="${id}" class="block cta"><div class="wrap"><div><p class="eyebrow">${esc(section.eyebrow)}</p>${icon(section)}<h2>${esc(section.title)}</h2><p>${paragraphs(section.text)}</p></div><a class="button" href="${safeUrl(section.buttonUrl)}">${esc(section.buttonLabel)}</a></div></section>`;
+  if (section.type === 'contact') return `<section id="${id}" class="block contact"><div class="wrap contact-grid"><div><p class="eyebrow">${esc(section.eyebrow)}</p><h2>${esc(section.title)}</h2><p>${paragraphs(section.text)}</p><address>${section.phone ? `<a href="${phoneHref(section.phone)}">${esc(section.phone)}</a>` : ''}${section.email ? `<a href="mailto:${esc(section.email)}">${esc(section.email)}</a>` : ''}</address></div><form id="contact-form"><label>Nimi<input name="name" required></label><label>Sähköposti<input name="email" type="email"></label><label>Puhelin<input name="phone"></label><label>Viesti<textarea name="message" required></textarea></label><input class="trap" name="website" tabindex="-1" autocomplete="off"><button class="button" type="submit">Lähetä</button><p class="form-status" role="status"></p></form></div></section>`;
+  return `<section id="${id}" class="block"><div class="wrap"><p class="eyebrow">${esc(section.eyebrow)}</p>${icon(section)}<h2>${esc(section.title)}</h2><div class="richtext">${section.html || paragraphs(section.text)}</div></div></section>`;
+}
+
+module.exports = function renderSite(site) {
+  const theme = site.theme;
+  const style = `--bg:${theme.background};--surface:${theme.surface};--text:${theme.text};--muted:${theme.muted};--accent:${theme.accent};--font:${theme.font};--heading:${theme.headingFont};--max:${Number(theme.maxWidth)}px;--radius:${Number(theme.radius)}px`;
+  const canonical = /^https:\/\//i.test(site.meta.siteUrl || '') ? `<link rel="canonical" href="${esc(site.meta.siteUrl)}">` : '';
+  return `<!doctype html><html lang="fi" style="${esc(style)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(site.meta.title)}</title><meta name="description" content="${esc(site.meta.description)}">${canonical}<link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css"><link rel="stylesheet" href="/assets/site.css?v=1"></head><body><header><a class="brand" href="#etusivu">${esc(site.meta.siteName)}</a><button class="menu" type="button">Valikko</button><nav>${site.navigation.map((item) => `<a href="#${esc(item.target)}">${esc(item.label)}</a>`).join('')}</nav></header><main>${site.sections.map(renderSection).join('')}</main><footer><span>© ${new Date().getFullYear()} ${esc(site.footer.text)}</span><a href="/admin">Hallinta</a></footer><script src="/assets/site.js?v=1" defer></script></body></html>`;
+};
