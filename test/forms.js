@@ -1,0 +1,24 @@
+'use strict';
+const assert=require('node:assert/strict'),forms=require('../lib/forms');
+const form=forms.clean({recipient:'forms@example.test',fields:[{id:'name',label:'Nimi',type:'text',required:true},{id:'email',label:'Sähköposti',type:'email',required:true},{id:'topic',label:'Aihe',type:'select',options:['Tarjous','Muu'],required:true},{id:'consent',label:'Hyväksyn',type:'checkbox',required:true}]});
+const section={id:'contact',title:'Tarjouspyyntö',type:'contact',form};
+const site={sections:[section],pages:[{slug:'yhteys',sections:[{...section,form:{...form,recipient:'page@example.test'}}]}]};
+const input={formId:'contact',values:{name:'Testi',email:'reply@example.test',topic:'Tarjous',consent:'on'},recipient:'attacker@example.test'};
+let result=forms.submission(site,input);assert.equal(result.recipient,'forms@example.test');assert.equal(result.message.email,'reply@example.test');assert.match(result.message.message,/Aihe: Tarjous/);assert.match(result.message.message,/Hyväksyn: Kyllä/);
+assert.equal(forms.submission(site,{...input,page:'yhteys'}).recipient,'page@example.test');
+for(const values of [{...input.values,name:''},{...input.values,email:'bad'},{...input.values,topic:'Forged'},{...input.values,consent:''},{...input.values,name:['array']}])assert.throws(()=>forms.submission(site,{...input,values}));
+assert.throws(()=>forms.submission(site,{...input,page:'unknown'}));assert.throws(()=>forms.submission(site,{...input,formId:'unknown'}));
+assert.throws(()=>forms.clean({...form,recipient:'test@example.test\r\nBcc: evil@example.test'}));
+assert.throws(()=>forms.clean({...form,fields:[...form.fields,form.fields[0]]}));
+assert.throws(()=>forms.clean({...form,fields:[{id:'website',label:'Trap',type:'text'}]}));
+assert.equal(forms.clean(undefined),null);
+const html=forms.fieldsHtml(form,s=>String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;'));
+assert.match(html,/<select name="topic" required>/);assert.doesNotMatch(html,/forms@example.test/);
+console.log('Forms tests OK (field schema, required, choices, email, checkbox, page lookup, recipient isolation)');
+// Input must update model immediately; relying on blur/change loses options on publish.
+const vm=require('node:vm'),fs=require('node:fs'),path=require('node:path'),listeners={};
+const editable={form:{fields:[{options:[],required:false}]}};let changes=0;
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../public/form-editor.js'),'utf8'),{document:{addEventListener:(name,handler)=>{listeners[name]=handler;}},editorSections:()=>[editable],dirty:()=>changes++});
+listeners.input({target:{dataset:{formOptions:'0:0'},value:'Tarjous\nKysymys'}});
+assert.equal(JSON.stringify(editable.form.fields[0].options),'["Tarjous","Kysymys"]');
+listeners.input({target:{dataset:{formRequired:'0:0'},checked:true}});assert.equal(editable.form.fields[0].required,true);assert.equal(changes,2);

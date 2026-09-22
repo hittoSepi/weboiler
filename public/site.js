@@ -1,13 +1,14 @@
 'use strict';
 
 const isPreview = document.body.dataset.preview === 'true';
+const formTexts=({fi:{preview:'Esikatselu: viestiä ei lähetetä.',success:'Kiitos! Viesti vastaanotettiin.',error:'Lähetys epäonnistui. Yritä uudelleen.'},sv:{preview:'Förhandsvisning: meddelandet skickas inte.',success:'Tack! Meddelandet har tagits emot.',error:'Kunde inte skicka. Försök igen.'},en:{preview:'Preview: no message is sent.',success:'Thank you! Your message was received.',error:'Sending failed. Please try again.'}})[document.documentElement.lang.split('-')[0]]||{preview:'Preview: no message is sent.',success:'Thank you! Your message was received.',error:'Sending failed. Please try again.'};
 document.querySelectorAll('.carousel').forEach(carousel => {
   const slides = [...carousel.querySelectorAll('.carousel-slide')];
   if (slides.length < 2) return;
   let selected = 0;
   let paused = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pause = carousel.querySelector('[data-pause]');
-  const updatePause = () => { pause.textContent = paused ? 'Jatka' : 'Pysäytä'; pause.setAttribute('aria-pressed', String(paused)); };
+  const updatePause = () => { pause.textContent = paused ? (pause.dataset.resumeLabel || 'Jatka') : (pause.dataset.pauseLabel || 'Pysäytä'); pause.setAttribute('aria-pressed', String(paused)); };
   function show(index) {
     selected = (index + slides.length) % slides.length;
     slides.forEach((slide, i) => { slide.classList.toggle('is-active', i === selected); slide.setAttribute('aria-hidden', String(i !== selected)); slide.inert = i !== selected; });
@@ -34,19 +35,19 @@ document.querySelectorAll('.contact form').forEach(form => {
   form.addEventListener('submit', async event => {
     event.preventDefault();
     const status = form.querySelector('.form-status');
-    if (isPreview) { status.textContent = 'Esikatselu: viestiä ei lähetetä.'; return; }
+    if (isPreview) { status.textContent = formTexts.preview; return; }
     const button = form.querySelector('button');
     button.disabled = true;
     try {
       const response = await fetch('/api/contact', {
         method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+        body: JSON.stringify(form.dataset.formId?{formId:form.dataset.formId,page:decodeURIComponent(location.pathname.replace(/^\/|\/$/g,'')),website:new FormData(form).get('website'),values:Object.fromEntries(new FormData(form))}:Object.fromEntries(new FormData(form)))
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
       form.reset();
-      status.textContent = 'Kiitos! Viesti vastaanotettiin.';
-    } catch (error) { status.textContent = error.message || 'Lähetys epäonnistui. Yritä uudelleen.'; }
+      status.textContent = formTexts.success;
+    } catch (error) { status.textContent = error.message || formTexts.error; }
     finally { button.disabled = false; }
   });
 });

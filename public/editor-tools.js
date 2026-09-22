@@ -4,13 +4,14 @@
 // silently change sections already placed on a page.
 function renderElements() {
   const elements = site.elements || [];
-  app.innerHTML = `<p class="muted">Tallenna sivueditorin osio omaksi elementiksi. Voit muokata mallia täällä ja lisätä siitä uusia kopioita sivulle.</p><div class="sections">${elements.map((element,index) => {
+  app.innerHTML = `<p><strong>Lisäyskohde: ${esc(activePage()?.title||'Etusivu')}</strong> — voit vaihtaa kohdesivua Sivueditorissa.</p><p class="muted">Tallenna sivueditorin osio omaksi elementiksi. Voit muokata mallia täällä ja lisätä siitä uusia kopioita sivulle.</p><div class="sections">${elements.map((element,index) => {
     const p = `elements.${index}`;
     const s = element.section;
     let fields = field(`${p}.name`,'Elementin nimi',element.name,{wide:true});
     fields += field(`${p}.section.title`,'Otsikko',s.title,{wide:true});
     fields += field(`${p}.section.eyebrow`,'Pieni otsikko',s.eyebrow,{wide:true});
     fields += iconFields(`${p}.section`,s);
+    fields += pluginSectionFields(s,`${p}.section`);
     if(s.type==='text') fields += richEditor(`${p}.section.html`,s.html||esc(s.text||''));
     else if(['hero','cta','contact'].includes(s.type)) fields += field(`${p}.section.text`,'Teksti',s.text,{textarea:true,wide:true});
     if(['hero','cta'].includes(s.type)) fields += field(`${p}.section.buttonLabel`,'Painikkeen teksti',s.buttonLabel)+field(`${p}.section.buttonUrl`,'Painikkeen linkki',s.buttonUrl);
@@ -28,10 +29,10 @@ function focusSection(index) {
   card?.scrollIntoView({behavior:'smooth',block:'center'});
   card?.focus({preventScroll:true});
 }
-function insertElement(index, after = site.sections.length - 1) {
+function insertElement(index, after = editorSections().length - 1) {
   const section = structuredClone(site.elements[index].section);
   section.id = `osio-${crypto.randomUUID().slice(0,8)}`;
-  site.sections.splice(after+1,0,section);
+  editorSections().splice(after+1,0,section);
   dirty();
   if(location.pathname==='/admin/editori') { renderEditor(); focusSection(after+1); }
   notice('Elementin kopio lisättiin sivun työversioon.');
@@ -58,7 +59,7 @@ function openContextMenu(index,x,y) {
   contextMenu = document.createElement('div');
   contextMenu.className='editor-context';
   contextMenu.setAttribute('role','menu');
-  contextMenu.innerHTML=`<strong>${esc(site.sections[index]?.title||'Sivu')}</strong>${index>=0?`<button data-context-edit="${index}">Muokkaa osiota</button><button data-action="duplicate" data-section="${index}">Kopioi osio</button><button data-action="up" data-section="${index}">Siirrä ylös</button><button data-action="down" data-section="${index}">Siirrä alas</button><button data-action="save-element" data-section="${index}">Tallenna omaksi elementiksi</button><button class="danger" data-action="delete" data-section="${index}">Poista osio</button>`:''}<strong>Lisää osio tämän jälkeen</strong>${Object.entries(TYPES).map(([type,label])=>`<button data-context-add="${type}" data-after="${index}">${label}</button>`).join('')}${(site.elements||[]).length?'<strong>Omat elementit</strong>':''}${(site.elements||[]).map((e,i)=>`<button data-insert-element="${i}" data-after="${index}">${esc(e.name)}</button>`).join('')}`;
+  contextMenu.innerHTML=`<strong>${esc(editorSections()[index]?.title||'Sivu')}</strong>${index>=0?`<button data-context-edit="${index}">Muokkaa osiota</button><button data-action="duplicate" data-section="${index}">Kopioi osio</button><button data-action="up" data-section="${index}">Siirrä ylös</button><button data-action="down" data-section="${index}">Siirrä alas</button><button data-action="save-element" data-section="${index}">Tallenna omaksi elementiksi</button><button class="danger" data-action="delete" data-section="${index}">Poista osio</button>`:''}<strong>Lisää osio tämän jälkeen</strong>${Object.entries(TYPES).map(([type,label])=>`<button data-context-add="${type}" data-after="${index}">${label}</button>`).join('')}${(site.elements||[]).length?'<strong>Omat elementit</strong>':''}${(site.elements||[]).map((e,i)=>`<button data-insert-element="${i}" data-after="${index}">${esc(e.name)}</button>`).join('')}`;
   document.body.append(contextMenu);
   contextMenu.style.left=`${Math.max(8,Math.min(x,innerWidth-contextMenu.offsetWidth-8))}px`;
   contextMenu.style.top=`${Math.max(8,Math.min(y,innerHeight-contextMenu.offsetHeight-8))}px`;
@@ -85,13 +86,13 @@ document.addEventListener('click',async event=>{
   const button=event.target.closest('button');
   if(!button)return;
   if(button.dataset.action==='save-element'){
-    const section=site.sections[Number(button.dataset.section)];
+    const section=editorSections()[Number(button.dataset.section)];
     closeContextMenu();
     const name=await elementNameDialog(section.title||TYPES[section.type]);
     if(name?.trim()) { site.elements??=[];site.elements.push({id:crypto.randomUUID(),name:name.trim(),section:structuredClone(section)});dirty();notice('Oma elementti tallennettu kirjastoon.'); }
   }
   if(button.dataset.contextEdit!==undefined)focusSection(Number(button.dataset.contextEdit));
-  if(button.dataset.contextAdd){const after=Number(button.dataset.after);site.sections.splice(after+1,0,defaultSection(button.dataset.contextAdd));rerenderEditor();focusSection(after+1);}
+  if(button.dataset.contextAdd){const after=Number(button.dataset.after);editorSections().splice(after+1,0,defaultSection(button.dataset.contextAdd));rerenderEditor();focusSection(after+1);}
   if(button.dataset.insertElement!==undefined)insertElement(Number(button.dataset.insertElement),button.dataset.after===undefined?undefined:Number(button.dataset.after));
   if(button.dataset.deleteElement!==undefined&&confirm('Poistetaanko malli kirjastosta? Sivulle jo lisätyt osiot säilyvät.')) {site.elements.splice(Number(button.dataset.deleteElement),1);renderElements();dirty();}
   if(button.dataset.template!==undefined) {
@@ -113,13 +114,13 @@ document.addEventListener('load',event=>{
   doc?.addEventListener('contextmenu',e=>{
     const section=e.target.closest('main > section');
     if(!section)return;
-    const index=site.sections.findIndex(s=>s.id===section.id);
+    const index=editorSections().findIndex(s=>s.id===section.id);
     e.preventDefault();
     const rect=frame.getBoundingClientRect();
     openContextMenu(index,rect.left+e.clientX,rect.top+e.clientY);
   });
   doc?.addEventListener('dblclick',e=>{
     const section=e.target.closest('main > section');
-    if(section)focusSection(site.sections.findIndex(s=>s.id===section.id));
+    if(section)focusSection(editorSections().findIndex(s=>s.id===section.id));
   });
 },true);

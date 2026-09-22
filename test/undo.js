@@ -1,0 +1,14 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {UndoState,moveSection}=require('../public/undo-state');
+const history=new UndoState();
+history.reset({text:'old'});history.record({text:'n'},'text',1000);history.record({text:'ne'},'text',1100);history.record({text:'new'},'text',1200);
+assert.deepEqual(history.undo(),{text:'old'});assert.deepEqual(history.redo(),{text:'new'});
+history.record({text:'other'},'other-field',1250);assert.deepEqual(history.undo(),{text:'new'});history.record({text:'branch'},'',1300);assert.equal(history.canRedo,false);
+history.replace({text:'normalized'});assert.deepEqual(history.undo(),{text:'new'});assert.deepEqual(history.redo(),{text:'normalized'});
+history.reset({text:'reset'});assert.equal(history.canUndo,false);assert.equal(history.canRedo,false);
+for(let index=0;index<100;index++)history.record({index});assert.equal(history.entries.length,40);
+const list=[{id:'a'},{id:'b'},{id:'c'},{id:'d'}];assert.equal(moveSection(list,'a','c',true),true);assert.deepEqual(list.map(x=>x.id),['b','c','a','d']);
+assert.equal(moveSection(list,'d','b'),true);assert.deepEqual(list.map(x=>x.id),['d','b','c','a']);assert.equal(moveSection(list,'b','c'),false);assert.equal(moveSection(list,'missing','a'),false);
+const pages=new UndoState();pages.reset({site:{sections:[],pages:[]},pageId:'home'});pages.record({site:{sections:[],pages:[{id:'second',sections:[{id:'a'}]}]},pageId:'second'});assert.equal(pages.undo().pageId,'home');assert.equal(pages.redo().site.pages[0].sections[0].id,'a');
+console.log('Undo tests OK (grouping, branching, normalization, limits, reorder, pages)');

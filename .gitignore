@@ -4,6 +4,7 @@ data/analytics.json
 data/admin-auth.json
 data/mail-settings.json
 data/ai-settings.json
+data/history/
 data/local-secret
 data/yhteydenotot.json
 public/uploads/*

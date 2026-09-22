@@ -11,11 +11,20 @@
 </head>
 <body>
   <header><a href="/admin">WEBOILER</a><div><a href="/" target="_blank">Avaa sivusto ↗</a><button id="logout">Kirjaudu ulos</button></div></header>
-  <div class="shell"><aside><nav id="nav"></nav></aside><main><div class="title"><div><p>HALLINTA</p><h1 id="title">Dashboard</h1></div><div class="publish-controls"><span id="save-state"></span><button id="publish" class="button" type="button">Julkaise</button></div></div><div id="status"></div><div id="app">Ladataan…</div></main></div>
+  <div class="shell"><aside><nav id="nav"></nav></aside><main><div class="title"><div><p>HALLINTA</p><h1 id="title">Dashboard</h1></div><div class="publish-controls"><span id="save-state"></span><button id="publish" class="button" type="button">Julkaise</button></div></div><div id="status" role="status" aria-live="polite"></div><div id="undo-controls" class="actions" hidden><button type="button" class="small-button" data-undo disabled>Kumoa</button><button type="button" class="small-button" data-redo disabled>Tee uudelleen</button><span class="muted">Tämän näkymän muutoshistoria · ei julkaise</span></div><div id="app">Ladataan…</div></main></div>
   <script src="/assets/admin.js?v=2" defer></script>
+  <script src="/assets/pages.js?v=1" defer></script>
+  <script src="/assets/languages.js?v=1" defer></script>
+  <script src="/assets/undo-state.js?v=1" defer></script>
+  <script src="/assets/editor-history.js?v=1" defer></script>
+  <script src="/assets/plugins.js?v=1" defer></script>
+  <script src="/assets/form-editor.js?v=1" defer></script>
   <script src="/assets/editor-tools.js?v=1" defer></script>
   <script src="/assets/asset-picker.js?v=1" defer></script>
+  <script src="/assets/image-focus.js?v=1" defer></script>
   <script src="/assets/richtext.js?v=1" defer></script>
   <script src="/assets/ai.js?v=1" defer></script>
+  <script src="/assets/history.js?v=1" defer></script>
+  <script src="/assets/transfer.js?v=1" defer></script>
 </body>
 </html>

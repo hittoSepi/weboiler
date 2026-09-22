@@ -29,12 +29,14 @@ async function run(){
     assert.equal(transportConfig.secure,true);
     assert.equal(delivery.replyTo,'reply@example.test');
     assert.match(delivery.text,/Sisältö/);
+    await mailer.sendContact({name:'Lomake',message:'Aihe: Tarjous',createdAt:new Date().toISOString()},'form@example.test');assert.equal(delivery.to,'form@example.test');
     mailer.saveSettings({...mailer.publicSettings(),smtpPassword:''});
     await mailer.sendTest();
     assert.equal(transportConfig.auth.pass,'test-smtp-secret','Empty input retains password');
     mailer.saveSettings({...mailer.publicSettings(),provider:'resend',resendApiKey:'test-api-secret'});
     await makeMailer().sendTest();
     assert.deepEqual(delivery.to,['recipient@example.test']);
+    await makeMailer().sendContact({name:'Lomake',message:'Aihe: Tarjous',createdAt:new Date().toISOString()},'form@example.test');assert.deepEqual(delivery.to,['form@example.test']);
     assert.ok(!fs.readFileSync(mailFile,'utf8').includes('test-api-secret'));
     const failedMailer=createMailer({filePath:mailFile,encryptionSecret:secret,createResend:()=>({emails:{send:async()=>({error:{message:'Test provider failure'}})}})});
     await assert.rejects(()=>failedMailer.sendTest(),/Test provider failure/);

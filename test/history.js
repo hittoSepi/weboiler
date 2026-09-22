@@ -1,0 +1,41 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const os=require('node:os');
+const path=require('node:path');
+const createStore=require('../lib/site-store');
+const root=fs.mkdtempSync(path.join(os.tmpdir(),'weboiler-history-'));
+try{
+  const editorFile=path.join(root,'draft.json'),liveFile=path.join(root,'live.json');
+  const original={meta:{title:'Alkuperäinen'},sections:[]};
+  fs.writeFileSync(editorFile,JSON.stringify(original));fs.writeFileSync(liveFile,JSON.stringify(original));
+  const options={editorFile,liveFile,clean:site=>{assert.ok(Array.isArray(site.sections));return site;}};
+  let store=createStore(options);
+  assert.deepEqual(store.history(),[]);
+  const initialVersion=store.snapshot().version;
+  let snapshot=store.save({...original,meta:{title:'Toinen'}},initialVersion);
+  assert.throws(()=>store.publish(initialVersion),{status:409});assert.equal(store.history().length,0);
+  store.publish(snapshot.version);
+  assert.equal(store.history().length,2);
+  const first=store.history().find(x=>x.kind==='previous-live');
+  snapshot=store.save({...original,meta:{title:'Keskeneräinen'}},snapshot.version);
+  assert.throws(()=>store.restore(first.id,initialVersion),{status:409});
+  assert.equal(store.history().length,2);
+  const restored=store.restore(first.id,snapshot.version);
+  assert.equal(restored.site.meta.title,'Alkuperäinen');assert.equal(restored.unpublished,true);
+  assert.equal(store.live().meta.title,'Toinen');
+  const undo=store.history().find(x=>x.kind==='before-restore');
+  assert.equal(store.historyEntry(undo.id).site.meta.title,'Keskeneräinen');
+  store=createStore(options); // Durable across restart.
+  assert.equal(store.history().length,3);
+  snapshot=store.restore(undo.id,restored.version);
+  assert.equal(snapshot.site.meta.title,'Keskeneräinen');
+  assert.throws(()=>store.historyEntry('../live'),{status:400});
+  assert.throws(()=>store.historyEntry('00000000-0000-0000-0000-000000000000'),{status:404});
+  const entryFile=path.join(root,'history',first.id+'.json');
+  const broken=JSON.parse(fs.readFileSync(entryFile));broken.site.meta.title='Altered';fs.writeFileSync(entryFile,JSON.stringify(broken));
+  assert.throws(()=>store.restore(first.id,snapshot.version),/eheystarkistus/);
+  assert.equal(store.snapshot().version,snapshot.version);
+  assert.equal(store.live().meta.title,'Toinen');
+  console.log('History tests OK (restore, displaced draft, restart, concurrency, integrity)');
+}finally{fs.rmSync(root,{recursive:true,force:true});}

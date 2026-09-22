@@ -20,6 +20,7 @@ function applyAsset(path,value,dialog) {
   dialog.close();
   if(location.pathname==='/admin/editori')renderEditor();
   else if(location.pathname==='/admin/elementit')renderElements();
+  else if(location.pathname==='/admin/plugins')renderPlugins();
   else renderSettings();
 }
 

@@ -145,6 +145,25 @@ async function run() {
     response = await fetch(`${base}/`);
     assert.match(await response.text(), /Vain työversiossa/);
 
+    assert.equal((await fetch(`${base}/api/admin/history`)).status,401);
+    response=await fetch(`${base}/api/admin/history`,{headers:{cookie}});
+    const history=(await response.json()).entries;
+    assert.equal(history.length,2);
+    const previous=history.find(entry=>entry.kind==='previous-live');
+    assert.equal(previous.site,undefined,'Listing must not send full historical content');
+    assert.equal((await fetch(`${base}/admin/historia/${previous.id}`,{redirect:'manual'})).status,302);
+    response=await fetch(`${base}/admin/historia/${previous.id}`,{headers:{cookie}});
+    assert.equal(response.headers.get('cache-control'),'no-store');
+    assert.equal(response.headers.get('x-robots-tag'),'noindex, nofollow');
+    assert.match(await response.text(),/Julkaistu lähtötilanne/);
+    assert.equal((await fetch(`${base}/api/admin/history/${previous.id}/restore`,{method:'POST',headers:{cookie,'content-type':'application/json'},body:'{}'})).status,403);
+    response=await fetch(`${base}/api/admin/history/${previous.id}/restore`,{method:'POST',headers:{cookie,'content-type':'application/json','x-csrf-token':session.csrf,'x-site-version':session.version},body:'{}'});
+    assert.equal(response.status,409);
+    response=await fetch(`${base}/api/admin/history/${previous.id}/restore`,{method:'POST',headers:{cookie,'content-type':'application/json','x-csrf-token':session.csrf,'x-site-version':saved.version},body:'{}'});
+    assert.equal(response.status,200);
+    assert.equal((await response.json()).site.meta.title,'Julkaistu lähtötilanne');
+    assert.match(await (await fetch(`${base}/`)).text(),/Vain työversiossa/,'Restoration must not publish');
+
     response = await fetch(`${base}/api/contact`, {
       method:'POST', headers:{'content-type':'application/json'},
       body:JSON.stringify({name:'Testaaja',email:'test@example.com',message:'Testiviesti'})
@@ -155,7 +174,7 @@ async function run() {
     assert.equal(response.status, 200);
     assert.ok((await response.json()).analytics.last30Days.messages >= 1);
 
-    for (const route of ['/admin','/admin/editori','/admin/elementit','/admin/media','/admin/asetukset']) {
+    for (const route of ['/admin','/admin/editori','/admin/elementit','/admin/media','/admin/asetukset','/admin/historia']) {
       response = await fetch(`${base}${route}`, { headers:{cookie} });
       assert.equal(response.status, 200);
     }

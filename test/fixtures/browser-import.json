@@ -1,0 +1,16 @@
+{
+  "format": "weboiler-site",
+  "version": 1,
+  "createdAt": "2026-09-22T10:00:00.000Z",
+  "site": {
+    "meta": { "siteName": "Tuonnin testisivu", "title": "Synteettinen tuontitesti", "locale": "fi" },
+    "theme": {},
+    "navigation": [],
+    "sections": [{ "id": "import-test", "type": "text", "title": "Tuotu vain luonnokseen", "text": "Synteettinen sisältö selaintestiä varten." }],
+    "pages": [],
+    "elements": [],
+    "plugins": {},
+    "footer": { "text": "Testi" }
+  },
+  "assets": []
+}

@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict'),plugins=require('../lib/plugins'),render=require('../views/site');
+const content=plugins.clean({content:{enabled:true,plans:[{id:'p',title:'Perus',price:'99 € / kk',text:'Sisältö',url:'/tilaa',linkLabel:'Tilaa',category:'A'}],questions:[{id:'q',title:'Miten?',text:'Näin\ntoisella rivillä'}],reviews:[{id:'r',title:'Asiakas',text:'Hyvä työ',role:'Yritys'}],people:[{id:'t',title:'Tekijä',role:'Rakentaja',email:'test@example.test',phone:'+358 40 123',image:'/uploads/photo.png',imageAlt:'Tekijän kuva',imagePosition:'25% 70%'}]}});
+const site={meta:{title:'Test'},theme:{},navigation:[],footer:{},plugins:content,sections:['pricing-list','faq-list','testimonials-list','team-list'].map((type,i)=>({id:'section-'+i,type,title:type}))};
+const html=render(site);assert.match(html,/99 € \/ kk/);assert.match(html,/href="\/tilaa"/);assert.match(html,/<details class="faq-item"><summary>Miten\?<\/summary>/);assert.match(html,/Näin<br>toisella rivillä/);assert.match(html,/<blockquote>Hyvä työ<\/blockquote>/);assert.match(html,/mailto:test@example.test/);assert.match(html,/tel:\+35840123/);assert.match(html,/object-position:25% 70%/);
+assert.equal(plugins.renderSection({...site.sections[0],pluginData:{category:'B'}},site,{}).items.length,0);
+const disabled=structuredClone(site);disabled.plugins.content.enabled=false;assert.doesNotMatch(render(disabled),/99 €|Hyvä työ|Tekijän kuva/);assert.equal(disabled.plugins.content.plans.length,1);
+const injection=structuredClone(site);injection.plugins.content.questions[0].title='<script>alert(1)</script>';assert.match(render(injection),/&lt;script&gt;/);assert.doesNotMatch(render(injection),/<script>alert/);
+assert.throws(()=>plugins.clean({content:{plans:[{id:'p',title:'Bad',url:'javascript:alert(1)'}]}}));
+assert.equal(plugins.catalog().find(p=>p.id==='content').sections.length,4);
+console.log('Content section tests OK (pricing, FAQ semantics, quotations, team contacts, image focus, filtering, disabled, escaping)');

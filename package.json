@@ -4,7 +4,23 @@
   "private": true,
   "description": "Kevyt lohkopohjainen Node.js-sivustopohja ja sisällönhallinta",
   "main": "server.js",
-  "scripts": { "start": "node server.js", "dev": "node --watch server.js", "check": "node test/check.js", "test": "node test/smoke.js && node test/services.js && node test/ai.js" },
-  "engines": { "node": ">=20" },
-  "dependencies": { "@fortawesome/fontawesome-free": "^7.0.1", "dotenv": "^17.2.2", "express": "^5.1.0", "multer": "^2.0.2", "nodemailer": "^10.0.10", "resend": "^6.28.1", "sanitize-html": "^2.17.0" }
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node test/check.js",
+    "test": "node test/smoke.js && node test/services.js && node test/ai.js && node test/history.js && node test/pages.js && node test/plugins.js && node test/images.js && node test/undo.js && node test/seo.js && node test/transfer.js && node test/blog.js && node test/forms.js && node test/languages.js && node test/embeds.js && node test/content-sections.js"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.0.1",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "nodemailer": "^10.0.10",
+    "resend": "^6.28.1",
+    "sanitize-html": "^2.17.0",
+    "sharp": "^0.35.4"
+  }
 }

@@ -8,8 +8,8 @@ function enhanceAI() {
   for(const control of app.querySelectorAll('[data-path], [data-rich-path]')) {
     const path=control.dataset.path||control.dataset.richPath;
     if(path.startsWith('theme.'))continue;
-    const image=/\.(image|src|logo)$/.test(path);
-    if(control.dataset.aiReady||(!image&&!/\.(title|text|description|eyebrow|buttonLabel|html|alt|imageAlt)$/.test(path)))continue;
+    const image=/\.(image|src|logo|shareImage)$/.test(path);
+    if(control.dataset.aiReady||(!image&&!/\.(title|seoTitle|text|description|eyebrow|buttonLabel|html|alt|imageAlt|shareImageAlt)$/.test(path)))continue;
     control.dataset.aiReady='true';
     const button=document.createElement('button');button.type='button';button.className='small-button';
     button.textContent=image?'Luo kuva AI:lla':'Kirjoita AI:lla';
